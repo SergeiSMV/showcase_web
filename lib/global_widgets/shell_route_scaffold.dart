@@ -101,7 +101,6 @@ class ExampleSidebarX extends StatelessWidget {
   Widget build(BuildContext context) {
     return SidebarX(
       controller: _controller,
-
       theme: SidebarXTheme(
         width: 60,
         margin: const EdgeInsets.all(5),
