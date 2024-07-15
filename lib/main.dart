@@ -3,14 +3,17 @@
 // flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'data/repositories/hive_implements.dart';
 import 'global_widgets/go_router.dart';
 import 'global_widgets/scaffold_messenger.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'riverpod/cart_provider.dart';
 import 'riverpod/requests_provider.dart';
 import 'riverpod/response_provider.dart';
@@ -20,10 +23,12 @@ import 'riverpod/token_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setUrlStrategy(PathUrlStrategy());
+  // GoRouter.optionURLReflectsImperativeAPIs = true;
+  // setUrlStrategy(null);
   await Hive.initFlutter();
   await Hive.openBox('mainStorage');
-  runApp(const ProviderScope(child: App())
-  );
+  runApp(const ProviderScope(child: App()));
 }
 
 
@@ -77,8 +82,8 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       connectMonitoring!.cancel();
     }
     connectMonitoring = Timer.periodic(const Duration(seconds: 10), (timer) {
-      final String clientID = ref.read(tokenProvider);
-      if (clientID.isNotEmpty){
+      final String token = ref.read(tokenProvider);
+      if (token.isNotEmpty){
         ref.refresh(baseRequestsProvider);
         ref.refresh(baseCartsProvider);
         ref.refresh(baseResponsesProvider);
@@ -89,6 +94,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      scrollBehavior: NoThumbScrollBehavior().copyWith(scrollbars: false),
       scaffoldMessengerKey: GlobalScaffoldMessenger.scaffoldMessengerKey,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
@@ -104,4 +110,14 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       ),
     );
   }
+}
+
+class NoThumbScrollBehavior extends ScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.trackpad,
+  };
 }

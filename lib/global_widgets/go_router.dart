@@ -1,39 +1,40 @@
 
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../ui/auth.dart';
 import '../ui/home.dart';
+import '../ui/registration/registration.dart';
 import 'shell_route_scaffold.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
-
 final GoRouter router = GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: '/home',
+  initialLocation: '/',
+  // refreshListenable: RouterRefreshStream(),
   routes: <RouteBase>[
     ShellRoute(
-      navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {        
         return ShellRouteScaffold(child: child);
       },
       routes: [
         GoRoute(
-          path: '/home',
+          path: '/',
           builder: (context, state) => const HomeScreen(),
           pageBuilder: (context, state) => const NoTransitionPage<void>(child: HomeScreen()),
         ),
-        /*
         GoRoute(
           path: '/auth',
           builder: (context, state) => const Auth(),
           pageBuilder: (context, state) => const NoTransitionPage<void>(child: Auth()),
+          routes: [
+            GoRoute(
+              path: 'registration',
+              builder: (context, state) => const Registration(),
+              pageBuilder: (context, state) => const NoTransitionPage<void>(child: Registration()),
+            ),
+          ]
         ),
-        GoRoute(
-          path: '/registration',
-          builder: (context, state) => const Registration(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: Registration()),
-        ),
+        
+        
+        /*
         GoRoute(
           path: '/categories',
           builder: (context, state) => const CategoriesScreen(),
