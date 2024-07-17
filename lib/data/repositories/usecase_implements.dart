@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:universal_html/html.dart' as html;
 
 import '../../domain/repositories/usecase_repository.dart';
 import '../../riverpod/cart_provider.dart';
@@ -47,6 +46,7 @@ class UseCaseImplements extends UseCaseRepository{
         break;
       case 1: // товары
         ref.read(lastPathProvider.notifier).state = '/categories';
+        GoRouter.of(context).go('/categories');
         break;
       case 7: // авторизация
         GoRouter.of(context).go('/auth');

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:go_router/go_router.dart';
 import 'package:showcase_web/data/repositories/hive_implements.dart';
-import 'package:universal_html/html.dart' as html;
 
 import '../constants/fonts.dart';
 import '../data/repositories/auth_implements.dart';

@@ -35,6 +35,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
               backgroundColor: Colors.white,
               appBar: isSmallScreen
                 ? AppBar(
+                    surfaceTintColor: Colors.white,
                     backgroundColor: Colors.white,
                     leading: IconButton(
                       onPressed: () {

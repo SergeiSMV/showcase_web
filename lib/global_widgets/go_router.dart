@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../ui/auth.dart';
+import '../ui/categories/categories_screen.dart';
 import '../ui/home.dart';
 import '../ui/registration/registration.dart';
 import 'shell_route_scaffold.dart';
@@ -32,14 +33,12 @@ final GoRouter router = GoRouter(
             ),
           ]
         ),
-        
-        
-        /*
         GoRoute(
           path: '/categories',
           builder: (context, state) => const CategoriesScreen(),
           pageBuilder: (context, state) => const NoTransitionPage<void>(child: CategoriesScreen()),
-          routes: [
+          routes: const [
+            /*
             GoRoute(
               path: ':categoryId',
               pageBuilder: (context, state) {
@@ -62,9 +61,11 @@ final GoRouter router = GoRouter(
                 ),
               ]
             ),
+            */
           ]
         ),
         
+        /*
         GoRoute(
           path: '/cart',
           builder: (context, state) => const CartScreen(),

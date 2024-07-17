@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:showcase_web/constants/fonts.dart';
 import 'package:showcase_web/data/repositories/usecase_implements.dart';
@@ -100,7 +99,6 @@ class _MenuState extends ConsumerState<Menu> with TickerProviderStateMixin {
                     children: [
                       menuElements('главная', 0, MdiIcons.home),
                       menuElements('товары', 1, MdiIcons.clipboardText),
-                      menuElements('поиск', 2, Icons.search),
                       token.isEmpty ? const SizedBox.shrink() : const SizedBox(height: 30,),
                       token.isEmpty ? const SizedBox.shrink() : Divider(
                         color: Colors.white.withOpacity(0.3),
@@ -108,6 +106,7 @@ class _MenuState extends ConsumerState<Menu> with TickerProviderStateMixin {
                         indent: 5,
                         endIndent: 5,
                       ),
+                      token.isEmpty ? const SizedBox.shrink() : menuElements('поиск', 2, Icons.search),
                       token.isEmpty ? const SizedBox.shrink() : menuElements('корзина', 3, MdiIcons.cart),
                       token.isEmpty ? const SizedBox.shrink() : menuElements('отгрузки', 4, MdiIcons.truckFast),
                       token.isEmpty ? const SizedBox.shrink() : menuElements('заказы', 5, MdiIcons.packageVariantClosed),
