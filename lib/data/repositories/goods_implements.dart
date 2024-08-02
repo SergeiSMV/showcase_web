@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +22,22 @@ class GoodsImplements extends GoodsRepository{
       Response response = await dio.get('$apiURL$getBackCategories');
       return response.data ?? [];
     } on DioException catch (e) {
+      log(e.toString(), name: 'ERROR');
+      GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: ${e.message}", 'error');
+      return [];
+    }
+  }
+
+
+  @override
+  Future<List> backendCategory(int categoryID) async {
+    final dioClient = DioClient();
+    final dio = dioClient.dio;
+    try {
+      Response response = await dio.get('$apiURL$getBackCategories/$categoryID');
+      return response.data ?? [];
+    } on DioException catch (e) {
+      log(e.toString(), name: 'ERROR');
       GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: ${e.message}", 'error');
       return [];
     }

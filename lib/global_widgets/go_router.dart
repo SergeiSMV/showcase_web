@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../ui/auth.dart';
 import '../ui/categories/categories_screen.dart';
+import '../ui/subcategories/subcategories_screen.dart';
 import '../ui/home.dart';
 import '../ui/registration/registration.dart';
 import 'shell_route_scaffold.dart';
@@ -37,19 +38,15 @@ final GoRouter router = GoRouter(
           path: '/categories',
           builder: (context, state) => const CategoriesScreen(),
           pageBuilder: (context, state) => const NoTransitionPage<void>(child: CategoriesScreen()),
-          routes: const [
-            /*
+          routes: [
             GoRoute(
               path: ':categoryId',
               pageBuilder: (context, state) {
-                int.parse(state.pathParameters['categoryId']!);
-                final extra = state.extra as Map<String, dynamic>;
-                final mainCategory = extra['mainCategory'] as String;
-                final subCategories = extra['subCategories'] as List<dynamic>;
-                final mainCategoryID = extra['mainCategoryID'] as int;
-                return NoTransitionPage<void>(child: SubCategoriesScreen(subCategories: subCategories, mainCategory: mainCategory, mainCategoryID: mainCategoryID,));
+                final categoryID = int.parse(state.pathParameters['categoryId']!);
+                return NoTransitionPage<void>(child: SubCategoriesScreen(categoryID: categoryID,));
               },
-              routes: [
+              routes: const [
+                /*
                 GoRoute(
                   path: 'products',
                   pageBuilder: (context, state) {
@@ -59,9 +56,9 @@ final GoRouter router = GoRouter(
                     return NoTransitionPage<void>(child: ProductsScreen(categoryID: categoryID, mainCategory: mainCategory,));
                   },
                 ),
+                */
               ]
             ),
-            */
           ]
         ),
         

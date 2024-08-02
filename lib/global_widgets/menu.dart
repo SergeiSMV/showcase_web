@@ -106,11 +106,11 @@ class _MenuState extends ConsumerState<Menu> with TickerProviderStateMixin {
                         indent: 5,
                         endIndent: 5,
                       ),
-                      token.isEmpty ? const SizedBox.shrink() : menuElements('поиск', 2, Icons.search),
-                      token.isEmpty ? const SizedBox.shrink() : menuElements('корзина', 3, MdiIcons.cart),
-                      token.isEmpty ? const SizedBox.shrink() : menuElements('отгрузки', 4, MdiIcons.truckFast),
-                      token.isEmpty ? const SizedBox.shrink() : menuElements('заказы', 5, MdiIcons.packageVariantClosed),
-                      token.isEmpty ? const SizedBox.shrink() : menuElements('адреса', 6, MdiIcons.mapMarker),
+                      // token.isEmpty ? const SizedBox.shrink() : menuElements('поиск', 2, Icons.search),
+                      token.isEmpty ? const SizedBox.shrink() : menuElements('корзина', 2, MdiIcons.cart),
+                      token.isEmpty ? const SizedBox.shrink() : menuElements('отгрузки', 3, MdiIcons.truckFast),
+                      token.isEmpty ? const SizedBox.shrink() : menuElements('заказы', 4, MdiIcons.packageVariantClosed),
+                      token.isEmpty ? const SizedBox.shrink() : menuElements('адреса', 5, MdiIcons.mapMarker),
 
                       const SizedBox(height: 30,),
                       Divider(

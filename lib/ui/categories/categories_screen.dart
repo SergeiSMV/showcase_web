@@ -3,15 +3,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:showcase_web/data/repositories/search_products_implements.dart';
 import 'package:showcase_web/riverpod/navigator_provider.dart';
 
 import '../../constants/fonts.dart';
 import '../../data/models/product_model/product_model.dart';
+import '../../global_widgets/search_animation.dart';
 import '../products/products_views.dart';
-import 'category_search.dart';
 import 'category_views.dart';
 
 
@@ -42,6 +41,8 @@ class _HomeScreenState extends ConsumerState<CategoriesScreen> {
   @override
   void dispose(){
     _debounce?.cancel();
+    searchController.clear();
+    searchController.dispose();
     super.dispose();
   }
 
@@ -90,29 +91,10 @@ class _HomeScreenState extends ConsumerState<CategoriesScreen> {
           children: [
             // header(),
             if (searchController.text.isEmpty) Expanded(child: categoryViews()) else Expanded(child: content),
+            // categoryViews()
           ],
         ),
       ),
-    );
-  }
-
-  Widget header() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: Text('Категории товаров', style: black(30, FontWeight.bold), overflow: TextOverflow.clip,),
-        ),
-        const Expanded(child: SizedBox(width: 10,)),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: IconButton(
-            onPressed: (){ 
-              GoRouter.of(context).push('/search',);
-            }, 
-            icon: Icon(MdiIcons.magnify, size: 30,)),
-        )
-      ],
     );
   }
 
@@ -129,7 +111,7 @@ class _HomeScreenState extends ConsumerState<CategoriesScreen> {
         ),
         height: 40,
         child: TextField(
-          autofocus: true,
+          autofocus: false,
           controller: searchController,
           style: black(20),
           minLines: 1,

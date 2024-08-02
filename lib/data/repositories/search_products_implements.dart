@@ -8,7 +8,6 @@ import '../../constants/api_config.dart';
 import '../../domain/repositories/search_products_repository.dart';
 import '../../global_widgets/scaffold_messenger.dart';
 import '../dio.dart';
-import 'hive_implements.dart';
 import 'usecase_implements.dart';
 
 class SearchProductsImplements extends SerachProductsRepository {
@@ -18,9 +17,8 @@ class SearchProductsImplements extends SerachProductsRepository {
   Future<List> searchProduct(String keywords, WidgetRef ref) async {
     final dioClient = DioClient();
     final dio = dioClient.dio;
-    String token = await HiveImplements().getToken();
     try {
-      Response result = await dio.get('$apiURL$getBackSearchProduct/$keywords', options: Options(headers: {'Authorization': 'Bearer $token',}));
+      Response result = await dio.get('$apiURL$getBackSearchProduct/$keywords');
       return List.from(result.data);
     } on DioException catch (e) {
       if (e.response != null) {
@@ -37,9 +35,8 @@ class SearchProductsImplements extends SerachProductsRepository {
   Future<List> searchProductByCategory(int categoryID, String keywords, WidgetRef ref) async {
     final dioClient = DioClient();
     final dio = dioClient.dio;
-    String token = await HiveImplements().getToken();
     try {
-      Response result = await dio.get('$apiURL$getBackSearchByCategory/$categoryID/$keywords', options: Options(headers: {'Authorization': 'Bearer $token',}));
+      Response result = await dio.get('$apiURL$getBackSearchByCategory/$categoryID/$keywords');
       return List.from(result.data);
     } on DioException catch (e) {
       if (e.response != null) {

@@ -10,6 +10,7 @@ import '../../data/models/category_model/category_data.dart';
 import '../../data/models/category_model/category_model.dart';
 import '../../global_widgets/loading.dart';
 import '../../riverpod/categories_provider.dart';
+import '../../riverpod/navigator_provider.dart';
 import '../../riverpod/products_provider.dart';
 
 Widget categoryViews() {
@@ -65,7 +66,7 @@ Widget categories(WidgetRef ref, List<dynamic> mainCategories) {
                   category.children.isEmpty ?
                   {
                     ref.read(productsProvider.notifier).state = null,
-                    GoRouter.of(context).push(
+                    GoRouter.of(context).go(
                       '/categories/${category.id}/products',
                       extra: {
                         'mainCategory': category.name,
@@ -73,14 +74,10 @@ Widget categories(WidgetRef ref, List<dynamic> mainCategories) {
                       },
                     )
                   } : 
-                  GoRouter.of(context).push(
-                    '/categories/${category.id}',
-                    extra: {
-                      'mainCategory': category.name,
-                      'subCategories': category.children,
-                      'mainCategoryID': category.id
-                    },
-                  );
+                  {
+                    ref.read(selectedSubCategoryProvider.notifier).state = -1,
+                    GoRouter.of(context).go('/categories/${category.id}')
+                  };
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -122,18 +119,18 @@ Widget categories(WidgetRef ref, List<dynamic> mainCategories) {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 15),
+                          padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 15),
                           width: MediaQuery.of(context).size.width,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                             // color: Colors.white60,
                             gradient: LinearGradient(
-                              colors: [Colors.black54, Colors.transparent, ], // Градиент от красного к зеленому
+                              colors: [Colors.black54, Colors.transparent, ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
                           ),
-                          child: Text(category.name, style: whiteText(18, FontWeight.w500)),
+                          child: Text(category.name, style: whiteText(18)),
                         ),
                       ],
                     ),
@@ -149,29 +146,32 @@ Widget categories(WidgetRef ref, List<dynamic> mainCategories) {
 }
 
 
-Column update(WidgetRef ref) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Image.asset('lib/images/no_data.png', scale: 3),
-      Text('что-то пошло не так...', style: black(14),),
-      const SizedBox(height: 10,),
-      ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00B737),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+Widget update(WidgetRef ref) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset('lib/images/no_data.png', scale: 4),
+        Text('что-то пошло не так...', style: black(14),),
+        const SizedBox(height: 10,),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00B737),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
+          onPressed: () async { 
+            Future.delayed(const Duration(seconds: 1), () {
+              return ref.refresh(baseCategoriesProvider);
+            });
+          }, 
+          child: Text('обновить', style: whiteText(16),)
         ),
-        onPressed: () async { 
-          Future.delayed(const Duration(seconds: 1), () {
-            return ref.refresh(baseCategoriesProvider);
-          });
-        }, 
-        child: Text('обновить', style: whiteText(16),)
-      ),
-    ],
+      ],
+    ),
   );
 }

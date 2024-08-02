@@ -89,29 +89,32 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
           ),
           child: Builder(
             builder: (context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  productImages(widget.currentProduct.quantity),
-                  const SizedBox(height: 5,),
-                  widget.currentProduct.pictures.isEmpty || widget.currentProduct.pictures.length == 1 ? const SizedBox(height: 8,) : imageIndicator(),
-                  const SizedBox(height: 5,),
-                  SizedBox(height: 40, child: Align(alignment: Alignment.topLeft, child: Text(widget.currentProduct.shortName, style: black(14), maxLines: 3, overflow: TextOverflow.ellipsis,))),
-                  widget.currentProduct.futureDate.isEmpty ? const SizedBox(height: 30,) :
-                  SizedBox(
-                    height: 30,
-                    child: Row(
-                      children: [
-                        Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red, size: 18,),
-                        Expanded(child: Text('${widget.currentProduct.futurePrice}₽ c ${widget.currentProduct.futureDate}', style: black(14), maxLines: 1, overflow: TextOverflow.ellipsis,)),
-                      ],
+              return SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    productImages(widget.currentProduct.quantity),
+                    const SizedBox(height: 5,),
+                    widget.currentProduct.pictures.isEmpty || widget.currentProduct.pictures.length == 1 ? const SizedBox(height: 8,) : imageIndicator(),
+                    const SizedBox(height: 5,),
+                    SizedBox(height: 40, child: Align(alignment: Alignment.topLeft, child: Text(widget.currentProduct.shortName, style: black(14), maxLines: 3, overflow: TextOverflow.ellipsis,))),
+                    widget.currentProduct.futureDate.isEmpty ? const SizedBox(height: 30,) :
+                    SizedBox(
+                      height: 30,
+                      child: Row(
+                        children: [
+                          Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red, size: 18,),
+                          Expanded(child: Text('${widget.currentProduct.futurePrice}₽ c ${widget.currentProduct.futureDate}', style: black(14), maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
                     ),
-                  ),
-                  Align(alignment: Alignment.centerLeft, child: getPrice(widget.currentProduct.basePrice, widget.currentProduct.clientPrice,)),
-                  const SizedBox(height: 5,),
-                  cartController(),
-                  const SizedBox(height: 5,),
-                ],
+                    Align(alignment: Alignment.centerLeft, child: getPrice(widget.currentProduct.basePrice, widget.currentProduct.clientPrice,)),
+                    const SizedBox(height: 5,),
+                    cartController(),
+                    // const SizedBox(height: 5,),
+                  ],
+                ),
               );
             }
           ),
@@ -195,6 +198,7 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
   Widget toCartButton(int quantity) {
     return Consumer(
       builder: (context, ref, child) {
+        // ignore: unused_local_variable
         String token = ref.watch(tokenProvider);
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
