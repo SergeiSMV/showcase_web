@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/repositories/goods_implements.dart';
 
+
+// состояние всех категорий
 final categoriesProvider = StateProvider<List>((ref) => []);
 
 final baseCategoriesProvider = FutureProvider.autoDispose((ref) async {
@@ -11,7 +13,7 @@ final baseCategoriesProvider = FutureProvider.autoDispose((ref) async {
   ref.read(categoriesProvider.notifier).state = result;
 });
 
-
+// состояние категории по id
 final categoryProvider = StateProvider<Map<String, dynamic>>((ref) => {});
 
 final baseCategoryProvider = FutureProvider.family.autoDispose((ref, int categoryID) async {

@@ -9,7 +9,6 @@ import '../../domain/repositories/goods_repository.dart';
 import '../../global_widgets/scaffold_messenger.dart';
 import '../dio.dart';
 import 'hive_implements.dart';
-import 'usecase_implements.dart';
 
 class GoodsImplements extends GoodsRepository{
   
@@ -57,7 +56,7 @@ class GoodsImplements extends GoodsRepository{
       if (e.response != null) {
         if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
           GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
-          UseCaseImplements().unloginProviderRef(ref);
+          // UseCaseImplements().unloginProviderRef(ref);
         }
         if (e.response!.statusCode == 422){
           GlobalScaffoldMessenger.instance.showSnackBar("Ошибка валидации!", 'error');

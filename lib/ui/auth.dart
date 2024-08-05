@@ -8,7 +8,6 @@ import 'package:showcase_web/data/repositories/hive_implements.dart';
 import '../constants/fonts.dart';
 import '../data/repositories/auth_implements.dart';
 import '../riverpod/cart_provider.dart';
-import '../riverpod/navigator_provider.dart';
 import '../riverpod/token_provider.dart';
 
 class Auth extends ConsumerStatefulWidget {
@@ -29,9 +28,11 @@ class _AuthState extends ConsumerState<Auth> {
     super.initState();
     _loginController.text = 'client1';
     _passController.text = 'DerParol';
+    /*
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectedIndexProvider.notifier).state = 7;
     });
+    */
   }
 
   @override
@@ -145,12 +146,6 @@ class _AuthState extends ConsumerState<Auth> {
                               token.isNotEmpty ?
                               await hive.saveToken(token).then((_) {
                                 ref.read(tokenProvider.notifier).state = token;
-
-                                int lastIndex = ref.read(lastIndexProvider);
-                                ref.read(selectedIndexProvider.notifier).state = lastIndex;
-                                String lastPath = ref.read(lastPathProvider);
-                                GoRouter.of(context).go(lastPath);
-
                                 return ref.refresh(baseCartsProvider);
                               }) : null;
                               progress?.dismiss();

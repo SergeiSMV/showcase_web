@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/fonts.dart';
-import '../riverpod/navigator_provider.dart';
 import '../riverpod/token_provider.dart';
 
 
@@ -22,9 +21,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState(){
     super.initState();
+    /*
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectedIndexProvider.notifier).state = 0;
     });
+    */
   }
 
   @override
@@ -42,13 +43,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           onTap: (){
             GoRouter.of(context).push('/auth');
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Home Screen', style: black(18),),
-              const SizedBox(height: 10,),
-              Text(token.isEmpty ? 'не авторизован' : 'авторизован', style: black(14),),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Home Screen', style: black(18),),
+                const SizedBox(height: 10,),
+                Text(token.isEmpty ? 'не авторизован' : 'авторизован', style: black(14),),
+              ],
+            ),
           )
         )
       ),

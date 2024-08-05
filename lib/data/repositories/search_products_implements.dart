@@ -1,6 +1,4 @@
 
-
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +6,6 @@ import '../../constants/api_config.dart';
 import '../../domain/repositories/search_products_repository.dart';
 import '../../global_widgets/scaffold_messenger.dart';
 import '../dio.dart';
-import 'usecase_implements.dart';
 
 class SearchProductsImplements extends SerachProductsRepository {
   
@@ -24,7 +21,7 @@ class SearchProductsImplements extends SerachProductsRepository {
       if (e.response != null) {
         if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
           GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
-          UseCaseImplements().unloginWidgetRef(ref);
+          // UseCaseImplements().unloginWidgetRef(ref);
         }
       }
       return [];
@@ -42,7 +39,7 @@ class SearchProductsImplements extends SerachProductsRepository {
       if (e.response != null) {
         if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
           GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
-          UseCaseImplements().unloginWidgetRef(ref);
+          // UseCaseImplements().unloginWidgetRef(ref);
         } else {
           GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: $e", 'error');
         }

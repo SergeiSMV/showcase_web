@@ -7,7 +7,6 @@ import '../../domain/repositories/cart_repository.dart';
 import '../../global_widgets/scaffold_messenger.dart';
 import '../dio.dart';
 import 'hive_implements.dart';
-import 'usecase_implements.dart';
 
 class CartImplements extends CartRepository{
 
@@ -25,7 +24,7 @@ class CartImplements extends CartRepository{
       if (e.response != null) {
         if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
           GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
-          UseCaseImplements().unloginProviderRef(ref);
+          // UseCaseImplements().unloginProviderRef(ref);
         }
         if (e.response!.statusCode == 422){
           GlobalScaffoldMessenger.instance.showSnackBar("Ошибка валидации!", 'error');

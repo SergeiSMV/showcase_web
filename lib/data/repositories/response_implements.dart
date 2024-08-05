@@ -7,7 +7,6 @@ import '../../domain/repositories/response_repository.dart';
 import '../../global_widgets/scaffold_messenger.dart';
 import '../dio.dart';
 import 'hive_implements.dart';
-import 'usecase_implements.dart';
 
 class ResposeImplements extends ResponseRepository{
 
@@ -23,7 +22,7 @@ class ResposeImplements extends ResponseRepository{
       if (e.response != null) {
         if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
           GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
-          UseCaseImplements().unloginProviderRef(ref);
+          // UseCaseImplements().unloginProviderRef(ref);
         } else {
           GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: $e", 'error');
         }
