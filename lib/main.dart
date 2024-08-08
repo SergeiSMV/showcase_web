@@ -1,4 +1,4 @@
-// ignore_for_file: unused_result
+// ignore_for_file: unused_result, avoid_web_libraries_in_flutter
 // подключение с другого устройства
 // flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0
 
@@ -23,8 +23,6 @@ import 'riverpod/token_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setUrlStrategy(PathUrlStrategy());
-  // GoRouter.optionURLReflectsImperativeAPIs = true;
-  // setUrlStrategy(null);
   await Hive.initFlutter();
   await Hive.openBox('mainStorage');
   runApp(const ProviderScope(child: App()));
@@ -38,21 +36,19 @@ class App extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _AppState();
 }
 
-class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
+class _AppState extends ConsumerState<App> {
 
   Timer? connectMonitoring;
 
   @override
   void initState(){
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     isAutgorized();
     scheduleUpdater();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     connectMonitoring?.cancel();
     super.dispose();
   }
@@ -65,15 +61,6 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       return ref.refresh(baseCartsProvider);
     }
     
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      connectMonitoring?.cancel();
-    } else if (state == AppLifecycleState.resumed) {
-      scheduleUpdater();
-    }
   }
 
   void scheduleUpdater() {

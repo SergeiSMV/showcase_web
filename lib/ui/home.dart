@@ -21,11 +21,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState(){
     super.initState();
-    /*
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(selectedIndexProvider.notifier).state = 0;
+      // ref.read(categoryExpandedProvider.notifier).close();
+      // ref.read(subCategoryExpandedProvider.notifier).close();
     });
-    */
   }
 
   @override

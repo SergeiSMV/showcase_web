@@ -1,7 +1,9 @@
 
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../ui/auth.dart';
+import '../ui/products/products_global_search.dart';
 import '../ui/products/products_screen.dart';
 import '../ui/home.dart';
 import '../ui/registration/registration.dart';
@@ -69,8 +71,13 @@ final GoRouter router = GoRouter(
           path: '/products/:categoryId',
           pageBuilder: (context, state) {
             final categoryID = int.parse(state.pathParameters['categoryId']!);
-            return NoTransitionPage<void>(child: ProductsScreen(categoryID: categoryID,));
+            return NoTransitionPage<void>(child: ProductsScreen(key: ValueKey(categoryID), categoryID: categoryID,));
           },
+        ),
+
+        GoRoute(
+          path: '/global',
+          builder: (context, state) => const ProductGlobalSearch(),
         ),
         
         /*

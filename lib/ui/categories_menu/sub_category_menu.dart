@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,21 +17,26 @@ class SubCategoryMenu extends ConsumerStatefulWidget {
 
 class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerProviderStateMixin {
 
+  void closeSubMenu() {
+    ref.read(subCategoryExpandedProvider.notifier).close();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
 
-        List categoryPath = ref.watch(categoryPathProvider);
-        int selectedCategory = ref.watch(selectedCategoryProvider);
+        int selectedSubCategory = ref.watch(selectedSubCategoryProvider);
+        int motherCategory = ref.watch(selectedMainCategoryProvider);
 
-        return ref.watch(baseCategoryProvider(selectedCategory)).when(
+        return ref.watch(baseCategoryProvider(selectedSubCategory)).when(
           loading: () => const Center(
             child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2,)),
           ),
           error: (error, _) => Center(child: Text(error.toString())),
           data: (data){
             CategoryModel category = CategoryModel(categories: ref.watch(categoryProvider));
+            Map subCategoryData = ref.read(categoriesDirectoryProvider.notifier).selectedCategoryData(selectedSubCategory);
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               child: SingleChildScrollView(
@@ -40,32 +44,32 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerPr
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
                         children: [
-                          categoryPath.length == 1 ? const Spacer() :
                           
                           // кнопка назад в субменю
+                          subCategoryData['motherCategory'] == 0 ? const Spacer() :
                           Expanded(
                             child: InkWell(
                               onTap: (){
-                                ref.read(selectedCategoryProvider.notifier).toggle(categoryPath[categoryPath.length - 2]);
-                                ref.read(categoryPathProvider.notifier).removeLastPath();
+                                subCategoryData['motherSubCategory'] == 0 ?
+                                ref.read(selectedSubCategoryProvider.notifier).toggle(subCategoryData['motherCategory']) :
+                                ref.read(selectedSubCategoryProvider.notifier).toggle(subCategoryData['motherSubCategory']);
                               },
-                              child: Align(alignment: Alignment.centerLeft, child: Icon(MdiIcons.chevronLeft, size: 20, color: Colors.white))
+                              child: Row(
+                                children: [
+                                  Align(alignment: Alignment.centerLeft, child: Icon(MdiIcons.chevronLeft, size: 22, color: Colors.white)),
+                                  Text('назад', style: whiteText(15),)
+                                ],
+                              )
                             ),
                           ),
 
                           // кнопка закрытия субменю
                           InkWell(
-                            onTap: (){
-                              ref.read(subCategoryMenuProvider.notifier).close();
-                              ref.read(selectedIndexCategoryProvider.notifier).toggle(-1);
-                              ref.read(categoryPathProvider.notifier).clear();
-                            },
+                            onTap: closeSubMenu,
                             child: Icon(MdiIcons.close, color: Colors.white, size: 18,),
                           ),
                         ],
@@ -77,7 +81,7 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerPr
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: InkWell(
                         onTap: (){
-                          GoRouter.of(context).go('/products/${categoryPath[categoryPath.length - 1]}');
+                          GoRouter.of(context).go('/products/${subCategoryData['id']}');
                         },
                         child: Container(
                           height: 35,
@@ -104,13 +108,17 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerPr
                           padding: const EdgeInsets.symmetric(vertical: 3),
                           child: InkWell(
                             onTap: (){ 
+                              ref.read(categoriesDirectoryProvider.notifier).addCategoryData({
+                                'id': subCategory.id, 
+                                'name': subCategory.name,
+                                'motherCategory' : motherCategory,
+                                'motherSubCategory': motherCategory == category.id ? 0 : category.id,
+                                'children': subCategory.children.isEmpty ? false : true
+                              });
+                              GoRouter.of(context).go('/products/${subCategory.id}');
                               if(subCategory.children.isNotEmpty) {
-                                ref.read(selectedCategoryProvider.notifier).toggle(subCategory.id);
-                                ref.read(categoryPathProvider.notifier).addPath(subCategory.id);
-                              } else {
-                                GoRouter.of(context).go('/products/${subCategory.id}');
+                                ref.read(selectedSubCategoryProvider.notifier).toggle(subCategory.id);
                               }
-                              
                             },
                             child: Container(
                               height: 35,

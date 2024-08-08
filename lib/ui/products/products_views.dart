@@ -9,9 +9,12 @@ import '../../constants/api_config.dart';
 import '../../constants/fonts.dart';
 import '../../data/models/category_model/category_data.dart';
 import '../../data/models/product_model/product_model.dart';
+import '../../data/repositories/cart_implements.dart';
 import '../../global_widgets/image_filteres.dart';
+import '../../global_widgets/scaffold_messenger.dart';
 import '../../riverpod/cart_provider.dart';
 import '../../riverpod/token_provider.dart';
+import 'product_card.dart';
 
 class ProductsViews extends ConsumerStatefulWidget {
   final ProductModel currentProduct;
@@ -25,18 +28,75 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
 
   final TextEditingController _quantityController = TextEditingController();
   final PageController pageController = PageController();
+  final CartImplements cartBackend = CartImplements();
+  late FocusNode _focusNode;
   // final BackendImplements backend = BackendImplements();
 
   @override
   void initState(){
     super.initState();
+    _focusNode = FocusNode();
+    focusListener(_focusNode);
+    initQuantity();
   }
 
   @override
   void dispose(){
+    _focusNode.dispose();
     _quantityController.dispose();
     pageController.dispose();
     super.dispose();
+  }
+
+  void focusListener(FocusNode focus) async {
+    focus.addListener(() {
+      if (!focus.hasFocus) {
+        int exact;
+        try {
+          exact = _quantityController.text.isEmpty ? 0 : int.parse(_quantityController.text);
+          exact < 0 ? GlobalScaffoldMessenger.instance.showSnackBar("Значение не может быть отрицательным!", 'error') :
+          cartBackend.putExact(widget.currentProduct.id, exact, ref).then(
+            (updateCart) { 
+              ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+              ref.read(cartProvider.notifier).state = updateCart;
+            }
+          );
+        } catch (_) {
+
+          GlobalScaffoldMessenger.instance.showSnackBar("Не верный формат количества!", 'error');
+        }
+      }
+    });
+  }
+
+  void updateController(){
+    final cart = ref.read(cartProvider);
+    for (var product in cart) {
+      if (product['product_id'] == widget.currentProduct.id && !_focusNode.hasFocus) {
+        if (_quantityController.text != product['quantity'].toString()){
+          if(mounted){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                _quantityController.text = product['quantity'].toString();
+              });
+            });
+          }
+        }
+        break;
+      }
+    }
+  }
+
+
+  void initQuantity(){
+    final startCart = ref.read(cartProvider);
+    for (var product in startCart) {
+      if (product['product_id'] == widget.currentProduct.id) {
+        setState(() {
+          _quantityController.text = product['quantity'].toString();
+        });
+      }
+    }
   }
 
 
@@ -94,7 +154,10 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    productImages(widget.currentProduct.quantity),
+                    InkWell(
+                      onTap: () => showProductCard(context),
+                      child: productImages(widget.currentProduct.quantity)
+                    ),
                     const SizedBox(height: 5,),
                     widget.currentProduct.pictures.isEmpty || widget.currentProduct.pictures.length == 1 ? const SizedBox(height: 8,) : imageIndicator(),
                     const SizedBox(height: 5,),
@@ -127,6 +190,7 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
     return Consumer(
       builder: (context, ref, child) {
         final cart = ref.watch(cartProvider);
+        updateController();
         return SizedBox(
           width: double.infinity,
           child: 
@@ -145,10 +209,22 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
                   //   );
                   // }),
                   child: Center(
-                    child: Text('${currentProductCartData(cart)['quantity']}', style: black(20, FontWeight.w500),)
+                    child: 
+                    
+                    // Container(
+                    //   height: 30,
+                    //   color: Colors.green,
+                    //   child: Center(
+                    //     child: Text('hello'),
+                    //   ),
+                    // )
+                    cartQuatity(),
+                    // child: Text('${currentProductCartData(cart)['quantity']}', style: black(18),)
                   ),
                 )
               ),
+
+
               quantityControlButton('plus')
             ],
           )
@@ -157,6 +233,49 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
       }
     );
   }
+
+
+  Widget cartQuatity(){
+    return Container(
+      height: 33,
+      decoration: BoxDecoration(
+        // borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.transparent
+        ),
+        color: Colors.white,
+      ),
+      child: Center(
+        child: TextField(
+          focusNode: _focusNode,
+          textAlign: TextAlign.center,
+          // autofocus: true,
+          keyboardType: TextInputType.number,
+          controller: _quantityController,
+          style: black(18),
+          minLines: 1,
+          textAlignVertical: TextAlignVertical.center,
+          decoration: const InputDecoration(
+            focusedBorder: InputBorder.none,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            isCollapsed: true,
+          ),
+          // onSubmitted: (value) async {
+          //   await cartBackend.putExact(widget.currentProduct.id, int.parse(_quantityController.text), ref).then(
+          //     (updateCart) { 
+          //       ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+          //       ref.read(cartProvider.notifier).state = updateCart;
+          //     }
+          //   );
+          // },
+        ),
+      ),
+    );
+  }
+
+
 
   SizedBox quantityControlButton(String operation, [List<dynamic> cart = const []]) {
     return SizedBox(
@@ -172,20 +291,20 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
           ),
         ),
         onPressed: () async { 
-          // operation == 'plus' ? 
-          // await backend.putIncrement(widget.currentProduct.id, ref).then(
-          //   (updateCart) { 
-          //     ref.read(cartBadgesProvider.notifier).state = updateCart.length;
-          //     ref.read(cartProvider.notifier).state = updateCart;
-          //   }
-          // )
-          // : 
-          // await backend.putDecrement(widget.currentProduct.id, currentProductCartData(cart)['quantity'], ref).then(
-          //   (updateCart) { 
-          //     ref.read(cartBadgesProvider.notifier).state = updateCart.length;
-          //     ref.read(cartProvider.notifier).state = updateCart;
-          //   }
-          // );
+          operation == 'plus' ? 
+          await cartBackend.putIncrement(widget.currentProduct.id, ref).then(
+            (updateCart) { 
+              ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+              ref.read(cartProvider.notifier).state = updateCart;
+            }
+          )
+          : 
+          await cartBackend.putDecrement(widget.currentProduct.id, currentProductCartData(cart)['quantity'], ref).then(
+            (updateCart) { 
+              ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+              ref.read(cartProvider.notifier).state = updateCart;
+            }
+          );
         }, 
         child: Center(
           child: operation == 'plus' ? Icon(MdiIcons.plus, color: Colors.black, size: 20,) : 
@@ -209,15 +328,15 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
             ),
           ),
           onPressed: () async {
-            // quantity == 0 ? null :
-            // token.isNotEmpty ? 
-            // await backend.putIncrement(widget.currentProduct.id, ref).then(
-            //   (updateCart) { 
-            //     ref.read(cartBadgesProvider.notifier).state = updateCart.length;
-            //     ref.read(cartProvider.notifier).state = updateCart;
-            //   }
-            // )
-            // : GlobalScaffoldMessenger.instance.showSnackBar('Вы не авторизованы!', 'error');
+            quantity == 0 ? null :
+            token.isNotEmpty ? 
+            await cartBackend.putIncrement(widget.currentProduct.id, ref).then(
+              (updateCart) { 
+                ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+                ref.read(cartProvider.notifier).state = updateCart;
+              }
+            )
+            : GlobalScaffoldMessenger.instance.showSnackBar('Вы не авторизованы!', 'error');
           }, 
           child: Text('в корзину', style: whiteText(16),)
         );
@@ -269,32 +388,32 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
     if (basePrice > clientPrice){
       return Row(
         children: [
-          Text('$clientPrice₽', style: black(18, FontWeight.normal), overflow: TextOverflow.fade,),
+          Text('${clientPrice.toStringAsFixed(2)}₽', style: black(18, FontWeight.normal), overflow: TextOverflow.fade,),
           const SizedBox(width: 10,),
-          Text('$basePrice₽', style: blackThroughPrice(16, FontWeight.normal)),
+          Text('${basePrice.toStringAsFixed(2)}₽', style: blackThroughPrice(16, FontWeight.normal)),
         ],
       );
     } else {
-      return Text('$clientPrice₽', style: black(18, FontWeight.normal));
+      return Text('${clientPrice.toStringAsFixed(2)}₽', style: black(18, FontWeight.normal));
     }
   }
 
-
-  /*
-  void showProductCard(BuildContext mainContext) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      context: mainContext,
-      builder: (context) {
-        return ProductCard(
-          product: widget.currentProduct,
-          cartController: cartController(),
+  Future showProductCard(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.all(10),
+          actionsPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          content: ProductCard(
+            product: widget.currentProduct, 
+            cartController: cartController(),
+          ),
         );
       },
     );
   }
-  */
 
 
 }

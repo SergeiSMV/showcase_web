@@ -1,9 +1,12 @@
 
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:go_router/go_router.dart';
 import 'package:showcase_web/data/repositories/hive_implements.dart';
+import 'dart:html' as html;
 
 import '../constants/fonts.dart';
 import '../data/repositories/auth_implements.dart';
@@ -146,6 +149,7 @@ class _AuthState extends ConsumerState<Auth> {
                               token.isNotEmpty ?
                               await hive.saveToken(token).then((_) {
                                 ref.read(tokenProvider.notifier).state = token;
+                                html.window.history.back();
                                 return ref.refresh(baseCartsProvider);
                               }) : null;
                               progress?.dismiss();

@@ -23,15 +23,26 @@ class CategoriesMenu extends ConsumerStatefulWidget {
 
 class _CategoriesMenuState extends ConsumerState<CategoriesMenu> with TickerProviderStateMixin {
 
+  void hasChildrenHandler(int categoryID){
+    ref.read(subCategoryExpandedProvider.notifier).open();
+    // ref.read(categoriesIdPathProvider.notifier).clear();
+    // ref.read(categoriesIdPathProvider.notifier).addPath(categoryID);
+    ref.read(selectedSubCategoryProvider.notifier).toggle(categoryID);
+  }
+
+  void notChildrenHandler(int categoryID) {
+    ref.read(subCategoryExpandedProvider.notifier).close();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        bool catIsExpanded = ref.watch(categoriesMenuProvider);
-        bool subCatIsExpanded = ref.watch(subCategoryMenuProvider);
+        bool catIsExpanded = ref.watch(categoryExpandedProvider);
+        bool subCatIsExpanded = ref.watch(subCategoryExpandedProvider);
         return Row(
           children: [
-            categoryMenu(catIsExpanded),
+            categoryMenu(catIsExpanded, subCatIsExpanded),
             subCategoriesMenu(subCatIsExpanded)
           ],
         );
@@ -60,7 +71,7 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenu> with TickerProv
     );
   }
 
-  AnimatedContainer categoryMenu(bool catIsExpanded) {
+  AnimatedContainer categoryMenu(bool catIsExpanded, bool subCatIsExpanded) {
     return AnimatedContainer(
       width: catIsExpanded ? 250.0 : 0.0,
       height: double.infinity,
@@ -86,83 +97,131 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenu> with TickerProv
             loading: () => const Loading(),
             error: (error, _) => Center(child: Text(error.toString())),
             data: (_){
+
+              print('${GoRouter.of(context).routeInformationProvider.value.uri}');
+
               final allCategories = ref.watch(categoriesProvider);
-              return ListView.builder(
+              return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                itemCount: allCategories.length,
-                itemBuilder: (context, index){
-                  
-                  CategoryModel category = CategoryModel(categories: allCategories[index]);
-                  int selectedIndex = ref.watch(selectedIndexCategoryProvider);
-      
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      top: 3, 
-                      bottom: 3, 
-                      left:  index == selectedIndex && category.children.isNotEmpty ? 10 : 5,
-                      right: index == selectedIndex && category.children.isNotEmpty ? 0 : 5
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(10), 
-                          bottomLeft: const Radius.circular(10),
-                          topRight: Radius.circular(index == selectedIndex && category.children.isNotEmpty ?  0 : 10),
-                          bottomRight: Radius.circular(index == selectedIndex && category.children.isNotEmpty ? 0 : 10),
-                        ),
-                        color: index == selectedIndex ? Colors.purple.shade200 : Colors.purple.shade50,
-                        boxShadow: [
-                          if(index == selectedIndex)
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                       child: InkWell(
                         onTap: (){
-                          category.children.isEmpty ? {
-                            ref.read(subCategoryMenuProvider.notifier).close(),
-                            GoRouter.of(context).go('/products/${category.id}')
-                          } :
-                            {
-                              ref.read(categoryPathProvider.notifier).clear(),
-                              ref.read(subCategoryMenuProvider.notifier).open(),
-                              ref.read(selectedCategoryProvider.notifier).toggle(category.id),
-                              ref.read(categoryPathProvider.notifier).addPath(category.id)
-                            };
-                          ref.read(selectedIndexCategoryProvider.notifier).toggle(index);
+                          GoRouter.of(context).go('/global');
                         },
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                height: 70,
-                                width: 70,
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: CachedNetworkImage(
-                                    imageUrl: '$apiURL${category.thumbnail}',
-                                    errorWidget: (context, url, error) => Image.asset(categoryImagePath['empty'], scale: 3),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.purple,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(MdiIcons.magnify, color: Colors.white),
+                              const SizedBox(width: 10,),
+                              Text('глобальный поиск', style: whiteText(14),)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.sizeOf(context).height - 120,
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: allCategories.length,
+                        itemBuilder: (context, index){
+                          
+                          CategoryModel category = CategoryModel(categories: allCategories[index]);
+                          int selectedMainCategory = ref.watch(selectedMainCategoryProvider);
+                          
+                          // плашка основной категории
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: 3, 
+                              bottom: 3, 
+                              left:  category.id == selectedMainCategory && category.children.isNotEmpty && subCatIsExpanded ? 10 : 5,
+                              right: category.id == selectedMainCategory && category.children.isNotEmpty && subCatIsExpanded ? 0 : 5
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: const Radius.circular(10), 
+                                  bottomLeft: const Radius.circular(10),
+                                  topRight: Radius.circular(category.id == selectedMainCategory && category.children.isNotEmpty && subCatIsExpanded ?  0 : 10),
+                                  bottomRight: Radius.circular(category.id == selectedMainCategory && category.children.isNotEmpty && subCatIsExpanded ? 0 : 10),
+                                ),
+                                color: category.id == selectedMainCategory ? Colors.purple.shade200 : Colors.purple.shade50,
+                                boxShadow: [
+                                  if(category.id == selectedMainCategory)
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 1,
+                                    blurRadius: 1,
+                                    offset: const Offset(0, 2),
                                   ),
+                                ],
+                              ),
+                              child: InkWell(
+                                onTap: (){
+                                  category.children.isEmpty ? 
+                                    notChildrenHandler(category.id) 
+                                    : hasChildrenHandler(category.id);
+                                  GoRouter.of(context).go('/products/${category.id}');
+                                  ref.read(selectedMainCategoryProvider.notifier).toggle(category.id);
+                                  ref.read(categoriesDirectoryProvider.notifier).addCategoryData({
+                                    'id': category.id, 
+                                    'name': category.name, 
+                                    'motherCategory' : 0,
+                                    'motherSubCategory': 0,
+                                    'children': category.children.isEmpty ? false : true
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: SizedBox(
+                                        height: 70,
+                                        width: 70,
+                                        child: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: CachedNetworkImage(
+                                            imageUrl: '$apiURL${category.thumbnail}',
+                                            errorWidget: (context, url, error) => Image.asset(categoryImagePath['empty'], scale: 3),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8,),
+                                    Expanded(
+                                      child: Text(category.name, style: category.id == selectedMainCategory ? whiteText(15) : black(15)),
+                                    ),
+                                    if(category.children.isNotEmpty)
+                                    Icon(MdiIcons.chevronRight, size: 20, color: category.id == selectedMainCategory ? Colors.white : Colors.purple,),
+                                  ],
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8,),
-                            Expanded(
-                              child: Text(category.name, style: index == selectedIndex ? whiteText(15) : black(15)),
-                            ),
-                            if(category.children.isNotEmpty)
-                            Icon(MdiIcons.chevronRight, size: 20, color: index == selectedIndex ? Colors.white : Colors.purple,),
-                          ],
-                        ),
+                          );
+                        }
                       ),
                     ),
-                  );
-                }
+                  ],
+                ),
               );
             },  
           );
