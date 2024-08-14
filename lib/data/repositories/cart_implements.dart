@@ -16,9 +16,7 @@ class CartImplements extends CartRepository{
     final dio = dioClient.dio;
     String token = await HiveImplements().getToken();
     try {
-      Response response = await dio.get(
-        cart, options: Options(headers: {'Authorization': 'Bearer $token',})
-      );
+      Response response = await dio.get(cart, options: Options(headers: {'Authorization': 'Bearer $token',}));
       return response.data ?? [];
     } on DioException catch (e) {
       if (e.response != null) {
@@ -49,11 +47,7 @@ class CartImplements extends CartRepository{
       "quantity_exact": null
     };
     try {
-      Response response = await dio.put(
-        cart, 
-        data: putData,
-        options: Options(headers: {'Authorization': 'Bearer $token',})
-      );
+      Response response = await dio.put(cart, data: putData, options: Options(headers: {'Authorization': 'Bearer $token',}));
       return response.data ?? [];
     } on DioException catch (e) {
       if (e.response != null) {
@@ -85,11 +79,7 @@ class CartImplements extends CartRepository{
       "quantity_exact": quantityExact
     };
     try {
-      Response response = await dio.put(
-        cart, 
-        data: putData,
-        options: Options(headers: {'Authorization': 'Bearer $token',})
-      );
+      Response response = await dio.put(cart, data: putData, options: Options(headers: {'Authorization': 'Bearer $token',}));
       return response.data ?? [];
     } on DioException catch (e) {
       if (e.response != null) {
@@ -121,7 +111,7 @@ class CartImplements extends CartRepository{
       "quantity_exact": quantityExact
     };
     try {
-      Response response = await dio.put('$apiURL$cart', data: putData, options: Options(headers: {'Authorization': 'Bearer $token',}));
+      Response response = await dio.put(cart, data: putData, options: Options(headers: {'Authorization': 'Bearer $token',}));
       return response.data ?? [];
     } on DioException catch (e) {
       if (e.response != null) {

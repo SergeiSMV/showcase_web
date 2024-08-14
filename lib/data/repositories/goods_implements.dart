@@ -18,7 +18,7 @@ class GoodsImplements extends GoodsRepository{
     final dioClient = DioClient();
     final dio = dioClient.dio;
     try {
-      Response response = await dio.get('$apiURL$getBackCategories');
+      Response response = await dio.get(getBackCategories);
       return response.data ?? [];
     } on DioException catch (e) {
       log(e.toString(), name: 'ERROR');
@@ -33,7 +33,7 @@ class GoodsImplements extends GoodsRepository{
     final dioClient = DioClient();
     final dio = dioClient.dio;
     try {
-      Response response = await dio.get('$apiURL$getBackCategories/$categoryID');
+      Response response = await dio.get('$getBackCategories/$categoryID');
       return response.data ?? [];
     } on DioException catch (e) {
       log(e.toString(), name: 'ERROR');
@@ -49,7 +49,7 @@ class GoodsImplements extends GoodsRepository{
     final dioClient = DioClient();
     final dio = dioClient.dio;
     try {
-      Response response = token.isEmpty ? await dio.get('$apiURL$getBackProducts/$categoryID') :
+      Response response = token.isEmpty ? await dio.get('$getBackProducts/$categoryID') :
       await dio.get('$apiURL$getBackProducts/$categoryID', options: Options(headers: {'Authorization': 'Bearer $token',}));
       return response.data ?? [];
     } on DioException catch (e) {

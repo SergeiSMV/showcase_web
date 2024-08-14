@@ -33,38 +33,41 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   @override
   void initState(){
     super.initState();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      searchCategoryHint = ref.read(categoriesDirectoryProvider.notifier).selectedCategoryData(widget.categoryID)['name'];
-      categoryData = ref.read(categoriesDirectoryProvider.notifier).selectedCategoryData(widget.categoryID);
-      // log(categoryData.toString(), name: 'ProductsScreen');
-      searchCategoryHint = categoryData['name'];
-
-      // настройка индекса материнской категории
-      if(categoryData['motherCategory'] == 0){
-        ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['id']);
-      } else {
-        ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['motherCategory']);
-      }
-
       
-      // настройка индекса подкатегории
-      // [ProductsScreen Log] {id: 73, name: Творожный, motherCategory: 43, motherSubCategory: 70, children: false}
-      // [ProductsScreen] {id: 70, name: Сыр, motherCategory: 43, motherSubCategory: 0, children: true}
-      if(categoryData['children']){
-        ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['id']);
-      } else {
-        if (categoryData['motherSubCategory'] == 0) {
-          ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['motherCategory']);
-        } else {
-          ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['motherSubCategory']);
-        }
-      }
+      categoryData = ref.read(categoriesDirectoryProvider.notifier).selectedCategoryData(widget.categoryID);
 
-      // настройка Expanded у subCategoryMenu
-      if(categoryData['children'] || categoryData['motherCategory'] != 0){
-        ref.read(subCategoryExpandedProvider.notifier).open();
-      } else {
-        ref.read(subCategoryExpandedProvider.notifier).close();
+      if (categoryData.isNotEmpty){
+
+        searchCategoryHint = categoryData['name'];
+        
+        // настройка индекса материнской категории
+        if(categoryData['motherCategory'] == 0){
+          ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['id']);
+        } else {
+          ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['motherCategory']);
+        }
+
+        // настройка индекса подкатегории
+        // [ProductsScreen Log] {id: 73, name: Творожный, motherCategory: 43, motherSubCategory: 70, children: false}
+        // [ProductsScreen] {id: 70, name: Сыр, motherCategory: 43, motherSubCategory: 0, children: true}
+        if(categoryData['children']){
+          ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['id']);
+        } else {
+          if (categoryData['motherSubCategory'] == 0) {
+            ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['motherCategory']);
+          } else {
+            ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['motherSubCategory']);
+          }
+        }
+
+        // настройка Expanded у subCategoryMenu
+        if(categoryData['children'] || categoryData['motherCategory'] != 0){
+          ref.read(subCategoryExpandedProvider.notifier).open();
+        } else {
+          ref.read(subCategoryExpandedProvider.notifier).close();
+        }
       }
     });
   }
@@ -111,7 +114,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: allProducts.isEmpty ? Center(child: Text('нет товаров в данном разделе', style: black(14),)) 
                   : 
-                  
                   SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(

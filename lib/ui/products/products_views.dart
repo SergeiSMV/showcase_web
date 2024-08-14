@@ -175,7 +175,6 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
                     Align(alignment: Alignment.centerLeft, child: getPrice(widget.currentProduct.basePrice, widget.currentProduct.clientPrice,)),
                     const SizedBox(height: 5,),
                     cartController(),
-                    // const SizedBox(height: 5,),
                   ],
                 ),
               );

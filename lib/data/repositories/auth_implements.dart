@@ -17,7 +17,7 @@ class AuthImplements extends AuthRepository{
       "password": pass
     };
     try {
-      Response response = await dio.post('$apiURL$auth', data: data);
+      Response response = await dio.post(auth, data: data);
       return response.data.toString();
     } on DioException catch (e) {
 
