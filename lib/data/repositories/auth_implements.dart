@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 import '../../constants/api_config.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../global_widgets/scaffold_messenger.dart';
+import '../../widgets/scaffold_messenger.dart';
 import '../dio.dart';
 
 class AuthImplements extends AuthRepository{

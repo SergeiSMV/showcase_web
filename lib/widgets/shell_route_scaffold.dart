@@ -1,4 +1,253 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:showcase_web/constants/fonts.dart';
+import 'package:showcase_web/riverpod/menu_index_provider.dart';
+import 'dart:html' as html;
+
+import '../constants/menu_list.dart';
+import '../data/repositories/hive_implements.dart';
+import '../riverpod/cart_provider.dart';
+import '../riverpod/token_provider.dart';
+import 'go_router.dart';
+
+
+
+class ShellRouteScaffold extends ConsumerStatefulWidget {
+  final Widget child;
+  const ShellRouteScaffold({super.key, required this.child});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ShellRouteScaffoldState();
+}
+
+class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with SingleTickerProviderStateMixin {
+
+  @override
+  Widget build(BuildContext context) {
+    indexUpdate();
+    return Builder(
+      builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 600;
+        return Consumer(
+          builder: (context, ref, child) {
+            
+            final String token = ref.watch(tokenProvider);
+            final menuIndex = ref.watch(menuIndexProvider);
+          
+            return Container(
+              color: Colors.green.shade100,
+              height: MediaQuery.sizeOf(context).height,
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: shellAppBar(isSmallScreen, menuIndex, token),
+                drawer: shellDrawer(menuIndex),
+                body: widget.child,
+              ),
+            );
+          }
+        );
+      }
+    );
+  }
+
+  AppBar shellAppBar(bool isSmallScreen, int menuIndex, String token) {
+    return AppBar(
+      toolbarHeight: 80,
+      backgroundColor: Colors.green.shade300,
+      automaticallyImplyLeading: false,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          !isSmallScreen ? const SizedBox.shrink() :
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu, size: 30, color: Colors.white,),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
+            }
+          ),
+          InkWell(
+            onTap: (){ GoRouter.of(context).go('/'); },
+            child: Image.asset('lib/images/name.png', scale: 4, color: Colors.white,)
+          ),
+          isSmallScreen ? Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(menuList[menuIndex], style: whiteText(18),),
+          ) : const SizedBox.shrink(),
+          const SizedBox(width: 30,),
+          isSmallScreen ? const SizedBox.shrink() :
+          Expanded(
+            child: SizedBox(
+              height: 25,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: menuList.length,
+                itemBuilder: (context, index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: menuIndex == index ? Colors.purple : Colors.transparent,
+                      ),
+                      width: 90,
+                      child: Center(
+                        child: InkWell(
+                          onTap: (){
+                            swithNavigate(index, token);
+                          },
+                          child: Text(
+                            menuList[index].isEmpty? 
+                              token.isEmpty ? 'войти' : 'выйти' 
+                              :
+                              menuList[index], 
+                            style: whiteText(16),
+                          )
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Drawer shellDrawer(int menuIndex) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: ListView(
+        shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Image.asset('lib/images/name.png', scale: 4, color: Colors.black54),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: menuList.length,
+                itemBuilder: (context, index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          width: 150,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: menuIndex == index ? Colors.green.shade300 : Colors.transparent,
+                          ),
+                          child: Center(
+                            child: InkWell(
+                              onTap: (){
+                                ref.read(menuIndexProvider.notifier).state = index;
+                                Navigator.pop(context);
+                              },
+                              child: Text(menuList[index], style: menuIndex == index ? whiteText(16) : black(16),)
+                            )
+                          )
+                        )
+                      )
+                    ),
+                  );
+                }
+              ),
+            ),
+          ],
+      )
+    );
+  }
+
+  void swithNavigate(int index, String token){
+    switch (index) {
+      case 0:
+        ref.read(menuIndexProvider.notifier).state = index;
+        GoRouter.of(context).push('/');
+        break;
+      case 1:
+        ref.read(menuIndexProvider.notifier).state = index;
+        GoRouter.of(context).push('/categories');
+        break;
+      case 2:
+        ref.read(menuIndexProvider.notifier).state = index;
+        GoRouter.of(context).push('/cart');
+        break;
+      case 3:
+        ref.read(menuIndexProvider.notifier).state = index;
+        GoRouter.of(context).push('/account');
+        break;
+      case 4:
+        if(token.isEmpty){
+          ref.read(menuIndexProvider.notifier).state = index;
+          GoRouter.of(context).push('/auth');
+        } else {
+          exitApp();
+          // GoRouter.of(context).push('/');
+        }
+        break;
+    }
+  }
+
+  void exitApp() async {
+    ref.read(tokenProvider.notifier).state = '';
+    ref.read(cartBadgesProvider.notifier).state = 0;
+    ref.read(cartProvider.notifier).state = [];
+    await HiveImplements().saveToken('');
+  }
+
+  void indexUpdate(){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final route = router.routerDelegate.currentConfiguration.last.route.path;
+      switch (route) {
+        case '/':
+          ref.read(menuIndexProvider.notifier).state = 0;
+          break;
+        case '/categories':
+          ref.read(menuIndexProvider.notifier).state = 1;
+          break;
+        case '/cart':
+          ref.read(menuIndexProvider.notifier).state = 2;
+          break;
+        case '/account':
+          ref.read(menuIndexProvider.notifier).state = 3;
+          break;
+      }
+    });
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// _old
+
+/*
 // ignore_for_file: avoid_web_libraries_in_flutter
 
 import 'package:flutter/material.dart';
@@ -158,7 +407,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(MdiIcons.cardAccountDetails, color: Colors.white,),
-                                      Text('вход', style: whiteText(14),)
+                                      Text('вход', style: whiteText(16),)
                                     ],
                                   ),
                                 ),
@@ -176,7 +425,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(MdiIcons.exitToApp, color: Colors.white,),
-                                      Text('выход', style: whiteText(14),)
+                                      Text('выход', style: whiteText(16),)
                                     ],
                                   ),
                                 ),
@@ -202,9 +451,5 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
       ),
     );
   }
-
-
-  
-
-
 }
+*/

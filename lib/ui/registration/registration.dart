@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../constants/fonts.dart';
-import '../../global_widgets/scaffold_messenger.dart';
+import '../../widgets/scaffold_messenger.dart';
 
 class Registration extends ConsumerStatefulWidget {
   const Registration({super.key});

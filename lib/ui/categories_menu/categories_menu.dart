@@ -9,7 +9,7 @@ import '../../constants/api_config.dart';
 import '../../constants/fonts.dart';
 import '../../data/models/category_model/category_data.dart';
 import '../../data/models/category_model/category_model.dart';
-import '../../global_widgets/loading.dart';
+import '../../widgets/loading.dart';
 import '../../riverpod/categories_menu_provider.dart';
 import '../../riverpod/categories_provider.dart';
 import 'sub_category_menu.dart';

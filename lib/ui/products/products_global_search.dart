@@ -10,7 +10,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../constants/fonts.dart';
 import '../../data/models/product_model/product_model.dart';
 import '../../data/repositories/search_products_implements.dart';
-import '../../global_widgets/search_animation.dart';
+import '../../widgets/search_animation.dart';
 import '../../riverpod/products_provider.dart';
 import 'products_views.dart';
 

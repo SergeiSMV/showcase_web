@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/api_config.dart';
 import '../../domain/repositories/search_products_repository.dart';
-import '../../global_widgets/scaffold_messenger.dart';
+import '../../widgets/scaffold_messenger.dart';
 import '../dio.dart';
 
 class SearchProductsImplements extends SerachProductsRepository {

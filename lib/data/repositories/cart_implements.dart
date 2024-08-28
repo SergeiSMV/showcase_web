@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/api_config.dart';
 import '../../domain/repositories/cart_repository.dart';
-import '../../global_widgets/scaffold_messenger.dart';
+import '../../widgets/scaffold_messenger.dart';
 import '../dio.dart';
 import 'hive_implements.dart';
 
