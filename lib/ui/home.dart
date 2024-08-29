@@ -46,9 +46,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Home Screen', style: black(18),),
+                Text('Home Screen', style: black54(18),),
                 const SizedBox(height: 10,),
-                Text(token.isEmpty ? 'не авторизован' : 'авторизован', style: black(14),),
+                Text(token.isEmpty ? 'не авторизован' : 'авторизован', style: black54(14),),
               ],
             ),
           )

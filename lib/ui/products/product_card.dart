@@ -91,11 +91,11 @@ class _ProductCardState extends State<ProductCard> {
               // название продукта
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Align(alignment: Alignment.centerLeft, child: Text(widget.product.name, style: black(18, FontWeight.bold),)),
+                child: Align(alignment: Alignment.centerLeft, child: Text(widget.product.name, style: black54(18, FontWeight.bold),)),
               ),
           
               // описание продукта
-              Align(alignment: Alignment.centerLeft, child: Text('Описание:', style: black(18, FontWeight.bold),)),
+              Align(alignment: Alignment.centerLeft, child: Text('Описание:', style: black54(18, FontWeight.bold),)),
               const SizedBox(height: 5,),
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -110,7 +110,7 @@ class _ProductCardState extends State<ProductCard> {
                         alignment: Alignment.centerLeft, 
                         child: Text(
                           widget.product.discription.isEmpty ? 'описание отсутствует...' : widget.product.discription, 
-                          style: black(15),
+                          style: black54(15),
                           overflow: TextOverflow.fade,
                         )
                       ),
@@ -125,7 +125,7 @@ class _ProductCardState extends State<ProductCard> {
               Row(
                 children: [
                   Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red,),
-                  Expanded(child: Text('${widget.product.futurePrice}₽ c ${widget.product.futureDate}', style: black(16), maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                  Expanded(child: Text('${widget.product.futurePrice}₽ c ${widget.product.futureDate}', style: black54(16), maxLines: 1, overflow: TextOverflow.ellipsis,)),
                 ],
               ),
           
@@ -149,7 +149,7 @@ class _ProductCardState extends State<ProductCard> {
         children: [
           Icon(MdiIcons.bookmark),
           const SizedBox(width: 5,),
-          Text('${clientPrice.toStringAsFixed(2)}₽', style: black(24, FontWeight.normal), overflow: TextOverflow.fade,),
+          Text('${clientPrice.toStringAsFixed(2)}₽', style: black54(24, FontWeight.normal), overflow: TextOverflow.fade,),
           const SizedBox(width: 10,),
           Text('${basePrice.toStringAsFixed(2)}₽', style: blackThroughPrice(20, FontWeight.normal)),
         ],
@@ -159,7 +159,7 @@ class _ProductCardState extends State<ProductCard> {
         children: [
           Icon(MdiIcons.bookmark),
           const SizedBox(width: 5,),
-          Text('${clientPrice.toStringAsFixed(2)}₽', style: black(24, FontWeight.normal)),
+          Text('${clientPrice.toStringAsFixed(2)}₽', style: black54(24, FontWeight.normal)),
         ],
       );
     }

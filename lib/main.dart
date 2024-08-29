@@ -13,6 +13,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'data/repositories/hive_implements.dart';
 import 'riverpod/cart_provider.dart';
+import 'riverpod/categories_provider.dart';
 import 'riverpod/requests_provider.dart';
 import 'riverpod/response_provider.dart';
 import 'riverpod/token_provider.dart';
@@ -44,6 +45,9 @@ class _AppState extends ConsumerState<App> {
     super.initState();
     isAutgorized();
     scheduleUpdater();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.refresh(baseCategoriesProvider);
+    });
   }
 
   @override
@@ -79,6 +83,7 @@ class _AppState extends ConsumerState<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      title: 'Prod62',
       scrollBehavior: NoThumbScrollBehavior().copyWith(scrollbars: false),
       scaffoldMessengerKey: GlobalScaffoldMessenger.scaffoldMessengerKey,
       routeInformationParser: router.routeInformationParser,

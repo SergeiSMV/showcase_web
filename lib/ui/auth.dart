@@ -79,7 +79,7 @@ class _AuthState extends ConsumerState<Auth> {
                       width: 300,
                       child: TextField(
                         controller: _loginController,
-                        style: black(18),
+                        style: black54(18),
                         minLines: 1,
                         obscureText: false,
                         textAlignVertical: TextAlignVertical.center,
@@ -110,7 +110,7 @@ class _AuthState extends ConsumerState<Auth> {
                       width: 300,
                       child: TextField(
                         controller: _passController,
-                        style: black(18),
+                        style: black54(18),
                         minLines: 1,
                         obscureText: true,
                         textAlignVertical: TextAlignVertical.center,

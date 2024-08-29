@@ -161,14 +161,14 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
                     const SizedBox(height: 5,),
                     widget.currentProduct.pictures.isEmpty || widget.currentProduct.pictures.length == 1 ? const SizedBox(height: 8,) : imageIndicator(),
                     const SizedBox(height: 5,),
-                    SizedBox(height: 40, child: Align(alignment: Alignment.topLeft, child: Text(widget.currentProduct.shortName, style: black(14), maxLines: 3, overflow: TextOverflow.ellipsis,))),
+                    SizedBox(height: 40, child: Align(alignment: Alignment.topLeft, child: Text(widget.currentProduct.shortName, style: black54(14), maxLines: 3, overflow: TextOverflow.ellipsis,))),
                     widget.currentProduct.futureDate.isEmpty ? const SizedBox(height: 30,) :
                     SizedBox(
                       height: 30,
                       child: Row(
                         children: [
                           Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red, size: 18,),
-                          Expanded(child: Text('${widget.currentProduct.futurePrice}₽ c ${widget.currentProduct.futureDate}', style: black(14), maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                          Expanded(child: Text('${widget.currentProduct.futurePrice}₽ c ${widget.currentProduct.futureDate}', style: black54(14), maxLines: 1, overflow: TextOverflow.ellipsis,)),
                         ],
                       ),
                     ),
@@ -251,7 +251,7 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
           // autofocus: true,
           keyboardType: TextInputType.number,
           controller: _quantityController,
-          style: black(18),
+          style: black54(18),
           minLines: 1,
           textAlignVertical: TextAlignVertical.center,
           decoration: const InputDecoration(
@@ -387,13 +387,13 @@ class _ProductsViewsState extends ConsumerState<ProductsViews> {
     if (basePrice > clientPrice){
       return Row(
         children: [
-          Text('${clientPrice.toStringAsFixed(2)}₽', style: black(18, FontWeight.normal), overflow: TextOverflow.fade,),
+          Text('${clientPrice.toStringAsFixed(2)}₽', style: black54(18, FontWeight.normal), overflow: TextOverflow.fade,),
           const SizedBox(width: 10,),
           Text('${basePrice.toStringAsFixed(2)}₽', style: blackThroughPrice(16, FontWeight.normal)),
         ],
       );
     } else {
-      return Text('${clientPrice.toStringAsFixed(2)}₽', style: black(18, FontWeight.normal));
+      return Text('${clientPrice.toStringAsFixed(2)}₽', style: black54(18, FontWeight.normal));
     }
   }
 

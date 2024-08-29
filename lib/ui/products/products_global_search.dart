@@ -56,7 +56,7 @@ class _ProductsScreenState extends ConsumerState<ProductGlobalSearch> {
         {
           setState(() { content = searchAnimation(); }),
           await SearchProductsImplements().searchProduct(_searchController.text, ref).then((value){
-            value.isEmpty ? setState(() { content = Center(child: Text('товар не найден', style: black(14),),); }) : setState(() { content = products(value); }) ;
+            value.isEmpty ? setState(() { content = Center(child: Text('товар не найден', style: black54(14),),); }) : setState(() { content = products(value); }) ;
           }),
         };
     });
@@ -83,7 +83,7 @@ class _ProductsScreenState extends ConsumerState<ProductGlobalSearch> {
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.sizeOf(context).height - 155,
                   ),
-                  child: _searchController.text.isEmpty ? Center(child: Text('воспользуйтесь строкой поиска', style: black(14),),): content,
+                  child: _searchController.text.isEmpty ? Center(child: Text('воспользуйтесь строкой поиска', style: black54(14),),): content,
                 ),
               ],
             ),

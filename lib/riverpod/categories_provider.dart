@@ -11,6 +11,7 @@ final categoriesProvider = StateProvider<List>((ref) => []);
 final baseCategoriesProvider = FutureProvider.autoDispose((ref) async {
   final result = await GoodsImplements().backendCategories();
   ref.read(categoriesProvider.notifier).state = result;
+  return result;
 });
 
 // категория по id

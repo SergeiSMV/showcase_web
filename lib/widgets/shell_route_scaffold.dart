@@ -1,17 +1,23 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:showcase_web/constants/fonts.dart';
 import 'package:showcase_web/riverpod/menu_index_provider.dart';
+// ignore: unused_import
 import 'dart:html' as html;
 
 import '../constants/menu_list.dart';
+import '../data/models/category_model/category_model.dart';
 import '../data/repositories/hive_implements.dart';
 import '../riverpod/cart_provider.dart';
+import '../riverpod/categories_provider.dart';
 import '../riverpod/token_provider.dart';
 import 'go_router.dart';
+import 'scaffold_messenger.dart';
 
 
 
@@ -43,7 +49,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
               child: Scaffold(
                 backgroundColor: Colors.white,
                 appBar: shellAppBar(isSmallScreen, menuIndex, token),
-                drawer: shellDrawer(menuIndex),
+                drawer: shellDrawer(menuIndex, token),
                 body: widget.child,
               ),
             );
@@ -73,12 +79,12 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
             }
           ),
           InkWell(
-            onTap: (){ GoRouter.of(context).go('/'); },
+            onTap: (){},
             child: Image.asset('lib/images/name.png', scale: 4, color: Colors.white,)
           ),
           isSmallScreen ? Padding(
             padding: const EdgeInsets.only(left: 20),
-            child: Text(menuList[menuIndex], style: whiteText(18),),
+            child: Text(menuList[menuIndex], style: whiteText(18, FontWeight.w300),),
           ) : const SizedBox.shrink(),
           const SizedBox(width: 30,),
           isSmallScreen ? const SizedBox.shrink() :
@@ -93,24 +99,24 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
                     child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: menuIndex == index ? Colors.purple : Colors.transparent,
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: menuIndex == index ? Colors.purple : Colors.transparent,
+                    ),
                       width: 90,
                       child: Center(
                         child: InkWell(
-                          onTap: (){
-                            swithNavigate(index, token);
-                          },
-                          child: Text(
-                            menuList[index].isEmpty? 
-                              token.isEmpty ? 'войти' : 'выйти' 
-                              :
-                              menuList[index], 
-                            style: whiteText(16),
-                          )
-                        ),
+                        onTap: (){
+                          swithNavigate(index, token);
+                        },
+                        child: Text(
+                          menuList[index].isEmpty? 
+                            token.isEmpty ? 'войти' : 'выйти' 
+                            :
+                            menuList[index], 
+                          style: whiteText(16, FontWeight.w300),
+                        )
+                      ),
                       ),
                     ),
                   );
@@ -123,7 +129,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
     );
   }
 
-  Drawer shellDrawer(int menuIndex) {
+  Drawer shellDrawer(int menuIndex, String token) {
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
@@ -154,10 +160,16 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                           child: Center(
                             child: InkWell(
                               onTap: (){
-                                ref.read(menuIndexProvider.notifier).state = index;
+                                swithNavigate(index, token);
                                 Navigator.pop(context);
                               },
-                              child: Text(menuList[index], style: menuIndex == index ? whiteText(16) : black(16),)
+                              child: Text(
+                                menuList[index].isEmpty? 
+                                  token.isEmpty ? 'войти' : 'выйти' 
+                                  :
+                                  menuList[index], 
+                                style: menuIndex == index ? whiteText(16) : black54(16),
+                              )
                             )
                           )
                         )
@@ -176,27 +188,28 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
     switch (index) {
       case 0:
         ref.read(menuIndexProvider.notifier).state = index;
-        GoRouter.of(context).push('/');
+        GoRouter.of(context).go('/');
         break;
       case 1:
         ref.read(menuIndexProvider.notifier).state = index;
-        GoRouter.of(context).push('/categories');
+        List allCategories = ref.read(categoriesProvider);
+        CategoryModel category = CategoryModel(categories: allCategories[0]);
+        GoRouter.of(context).go('/products/${category.id}');
         break;
       case 2:
         ref.read(menuIndexProvider.notifier).state = index;
-        GoRouter.of(context).push('/cart');
+        GoRouter.of(context).go('/cart');
         break;
       case 3:
         ref.read(menuIndexProvider.notifier).state = index;
-        GoRouter.of(context).push('/account');
+        GoRouter.of(context).go('/account');
         break;
       case 4:
         if(token.isEmpty){
           ref.read(menuIndexProvider.notifier).state = index;
-          GoRouter.of(context).push('/auth');
+          GoRouter.of(context).go('/auth');
         } else {
           exitApp();
-          // GoRouter.of(context).push('/');
         }
         break;
     }
@@ -212,12 +225,14 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
   void indexUpdate(){
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final route = router.routerDelegate.currentConfiguration.last.route.path;
+      log(route, name: 'ShellRouteScaffold, route');
       switch (route) {
         case '/':
           ref.read(menuIndexProvider.notifier).state = 0;
           break;
-        case '/categories':
+        case '/products':
           ref.read(menuIndexProvider.notifier).state = 1;
+
           break;
         case '/cart':
           ref.read(menuIndexProvider.notifier).state = 2;

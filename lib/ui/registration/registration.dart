@@ -61,7 +61,7 @@ class _RegistrationState extends ConsumerState<Registration> {
                       child: TextField(
                         keyboardType: TextInputType.number,
                         controller: innController,
-                        style: black(18),
+                        style: black54(18),
                         minLines: 1,
                         obscureText: false,
                         textAlignVertical: TextAlignVertical.center,
@@ -93,7 +93,7 @@ class _RegistrationState extends ConsumerState<Registration> {
                       child: TextField(
                         keyboardType: TextInputType.number,
                         controller: phoneController,
-                        style: black(18),
+                        style: black54(18),
                         minLines: 1,
                         obscureText: false,
                         textAlignVertical: TextAlignVertical.center,
@@ -104,7 +104,7 @@ class _RegistrationState extends ConsumerState<Registration> {
                           ),
                           hintStyle: grey(16),
                           hintText: 'телефон',
-                          prefixIcon: SizedBox(width: 30, height: 30, child: Center(child: Text('+7', style: black(18),))),
+                          prefixIcon: SizedBox(width: 30, height: 30, child: Center(child: Text('+7', style: black54(18),))),
                           isCollapsed: true
                         ),
                         onChanged: (_){ },

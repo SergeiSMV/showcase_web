@@ -91,7 +91,7 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerPr
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: Colors.white
                           ),
-                          child: Align(alignment: Alignment.centerLeft, child: Text('Все товары в категории', style: black(15),)),
+                          child: Align(alignment: Alignment.centerLeft, child: Text('Все товары в категории', style: black54(15),)),
                         ),
                       ),
                     ),
@@ -129,7 +129,7 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerPr
                               ),
                               child: Row(
                                 children: [
-                                  Expanded(child: Text(subCategory.name, style: black(15),)),
+                                  Expanded(child: Text(subCategory.name, style: black54(15),)),
                                   if(subCategory.children.isNotEmpty)
                                   Icon(MdiIcons.chevronRight, size: 20, color: Colors.black),
                                 ],

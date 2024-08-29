@@ -97,9 +97,6 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenu> with TickerProv
             loading: () => const Loading(),
             error: (error, _) => Center(child: Text(error.toString())),
             data: (_){
-
-              print('${GoRouter.of(context).routeInformationProvider.value.uri}');
-
               final allCategories = ref.watch(categoriesProvider);
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -208,7 +205,7 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenu> with TickerProv
                                     ),
                                     const SizedBox(width: 8,),
                                     Expanded(
-                                      child: Text(category.name, style: category.id == selectedMainCategory ? whiteText(15) : black(15)),
+                                      child: Text(category.name, style: category.id == selectedMainCategory ? whiteText(15) : black54(15)),
                                     ),
                                     if(category.children.isNotEmpty)
                                     Icon(MdiIcons.chevronRight, size: 20, color: category.id == selectedMainCategory ? Colors.white : Colors.purple,),

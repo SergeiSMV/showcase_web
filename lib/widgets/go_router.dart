@@ -11,7 +11,6 @@ import 'shell_route_scaffold.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
-  // refreshListenable: RouterRefreshStream(),
   routes: <RouteBase>[
     ShellRoute(
       builder: (context, state, child) {        
