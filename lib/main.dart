@@ -61,7 +61,7 @@ class _AppState extends ConsumerState<App> {
     String token = await hive.getToken();
     if (token.isNotEmpty) {
       ref.read(tokenProvider.notifier).state = token;
-      return ref.refresh(baseCartsProvider);
+      ref.refresh(baseCartsProvider);
     }
     
   }

@@ -11,11 +11,10 @@ import 'package:showcase_web/riverpod/categories_provider.dart';
 import '../../constants/fonts.dart';
 import '../../data/models/product_model/product_model.dart';
 import '../../data/repositories/search_products_implements.dart';
-import '../../riverpod/categories_menu_provider.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/search_animation.dart';
 import '../../riverpod/products_provider.dart';
-import 'products_views.dart';
+import 'product_views/products_views.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   final int categoryID;
@@ -38,32 +37,40 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     super.initState();    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       List allCategories = ref.read(categoriesProvider);
-      // log(allCategories.toString(), name: 'ProductsScreen, allCategories');
-
       if(allCategories.isEmpty){
-        // Обновляем провайдер
         ref.refresh(baseCategoriesProvider.future).then((result){
           allCategories = ref.read(categoriesProvider);
-          // log(allCategories.toString(), name: 'ProductsScreen, refresh');
+          if(allCategories.isNotEmpty){
+            Map<String, dynamic>? foundCategory = findCategoryById(allCategories, widget.categoryID);
+            if (foundCategory != null) {
+              setState(() {
+                searchCategoryHint = foundCategory['name'];
+              });
+            } else {
+              log('Категория с таким ID не найдена.', name: 'ProductsScreen, foundCategory');
+            }
+          }
         });
-
+      } else {
+        Map<String, dynamic>? foundCategory = findCategoryById(allCategories, widget.categoryID);
+        if (foundCategory != null) {
+          setState(() {
+            searchCategoryHint = foundCategory['name'];
+          });
+        } else {
+          log('Категория с таким ID не найдена.', name: 'ProductsScreen, foundCategory');
+        }
       }
-
-
       /*
       categoryData = ref.read(categoriesDirectoryProvider.notifier).selectedCategoryData(widget.categoryID);
-
       if (categoryData.isNotEmpty){
-
         searchCategoryHint = categoryData['name'];
-        
         // настройка индекса материнской категории
         if(categoryData['motherCategory'] == 0){
           ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['id']);
         } else {
           ref.read(selectedMainCategoryProvider.notifier).toggle(categoryData['motherCategory']);
         }
-
         // настройка индекса подкатегории
         // [ProductsScreen Log] {id: 73, name: Творожный, motherCategory: 43, motherSubCategory: 70, children: false}
         // [ProductsScreen] {id: 70, name: Сыр, motherCategory: 43, motherSubCategory: 0, children: true}
@@ -76,7 +83,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             ref.read(selectedSubCategoryProvider.notifier).toggle(categoryData['motherSubCategory']);
           }
         }
-
         // настройка Expanded у subCategoryMenu
         if(categoryData['children'] || categoryData['motherCategory'] != 0){
           ref.read(subCategoryExpandedProvider.notifier).open();
@@ -88,7 +94,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     });
     
   }
-
 
   @override
   void dispose(){
@@ -113,11 +118,26 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     });
   }
 
+  Map<String, dynamic>? findCategoryById(List categories, int categoryId) {
+    for (var category in categories) {
+      if (category['category_id'] == categoryId) {
+        return category;
+      }
+      if (category.containsKey('children')) {
+        var found = findCategoryById(category['children'], categoryId);
+        if (found != null) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Consumer(
         builder: (context, ref, child) {      
           return ref.watch(baseProductsProvider(widget.categoryID)).when( 
@@ -139,55 +159,17 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           child: searchField(),
                         ),
 
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.sizeOf(context).height - 155,
+                        // _searchController.text.isEmpty ? products(allProducts): content,
+
+                        Padding(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.sizeOf(context).height - 155,
+                            ),
+                            child: _searchController.text.isEmpty ? products(allProducts): content,
                           ),
-                          child: _searchController.text.isEmpty ? products(allProducts): content,
                         ),
-
-                        // searchController.text.isEmpty ? products(allProducts): content,
-
-                        /*
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                        
-                            // Задаем минимальное и максимальное количество столбцов
-                            int minCrossAxisCount = 3;
-                            int maxCrossAxisCount = 9;
-                        
-                            // Задаем ширину элемента в пикселях
-                            double itemWidth = 200.0;
-                            double itemHeight = 280.0;
-                        
-                            // Вычисляем количество столбцов в зависимости от ширины контейнера
-                            int crossAxisCount = (constraints.maxWidth / itemWidth).floor();
-                        
-                            // Ограничиваем количество столбцов заданными пределами
-                            crossAxisCount = crossAxisCount.clamp(minCrossAxisCount, maxCrossAxisCount);
-                            
-                        
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                              child: GridView.builder(
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: allProducts.length,
-                                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: itemWidth,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  mainAxisExtent: itemHeight,
-                                ),
-                                itemBuilder: (BuildContext context, int index) {
-                                  ProductModel currentGoods = ProductModel(product: allProducts[index]);
-                                  return ProductsViews(currentProduct: currentGoods,);
-                                },
-                              ),
-                            );
-                          }
-                        )
-                        */
                       ],
                     ),
                   ),

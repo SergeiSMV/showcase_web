@@ -12,7 +12,7 @@ import '../../data/models/product_model/product_model.dart';
 import '../../data/repositories/search_products_implements.dart';
 import '../../widgets/search_animation.dart';
 import '../../riverpod/products_provider.dart';
-import 'products_views.dart';
+import 'product_views/products_views.dart';
 
 class ProductGlobalSearch extends ConsumerStatefulWidget {
   const ProductGlobalSearch({super.key});

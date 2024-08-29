@@ -1,6 +1,4 @@
 
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:showcase_web/data/repositories/goods_implements.dart';
 

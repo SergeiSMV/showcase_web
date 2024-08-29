@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +15,6 @@ import '../riverpod/cart_provider.dart';
 import '../riverpod/categories_provider.dart';
 import '../riverpod/token_provider.dart';
 import 'go_router.dart';
-import 'scaffold_messenger.dart';
 
 
 
@@ -225,14 +222,12 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
   void indexUpdate(){
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final route = router.routerDelegate.currentConfiguration.last.route.path;
-      log(route, name: 'ShellRouteScaffold, route');
       switch (route) {
         case '/':
           ref.read(menuIndexProvider.notifier).state = 0;
           break;
-        case '/products':
+        case '/products/:categoryId':
           ref.read(menuIndexProvider.notifier).state = 1;
-
           break;
         case '/cart':
           ref.read(menuIndexProvider.notifier).state = 2;
