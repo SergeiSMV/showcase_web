@@ -1,10 +1,16 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:showcase_web/constants/fonts.dart';
 
+import '../../../../data/models/product_model/product_model.dart';
+import '../../../../data/repositories/cart_implements.dart';
+import '../../../../riverpod/cart_provider.dart';
+import '../../../../widgets/scaffold_messenger.dart';
+
 // поле ввода количества !только для маленького экрана
-productQuatityFieldLarge(BuildContext mainContext, TextEditingController controller, String name){
+productQuatityFieldSmall(BuildContext mainContext, TextEditingController controller, ProductModel currentProduct, WidgetRef ref){
   return showModalBottomSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -23,8 +29,8 @@ productQuatityFieldLarge(BuildContext mainContext, TextEditingController control
           children: [
             const SizedBox(height: 40,),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Align(alignment: Alignment.centerLeft, child: Text(name, style: black54(18, FontWeight.bold),)),
+              padding: const EdgeInsets.symmetric(horizontal: 70),
+              child: Align(alignment: Alignment.center, child: Text(currentProduct.name, style: black54(18, FontWeight.bold),)),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
@@ -72,7 +78,25 @@ productQuatityFieldLarge(BuildContext mainContext, TextEditingController control
                   ),
                 ),
                 onPressed: () async { 
-                  Navigator.pop(context);
+                  int exact;
+                  final CartImplements cartBackend = CartImplements();
+                  try {
+                    exact = controller.text.isEmpty ? 0 : int.parse(controller.text);
+                    exact < 0 ? 
+                      GlobalScaffoldMessenger.instance.showSnackBar("Значение не может быть отрицательным!", 'error') 
+                      :
+                      cartBackend.putExact(currentProduct.id, exact, ref).then(
+                        (updateCart) { 
+                          ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+                          ref.read(cartProvider.notifier).state = updateCart;
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        }
+                      );
+                  } catch (_) {
+                    GlobalScaffoldMessenger.instance.showSnackBar("Не верный формат количества!", 'error');
+                  }
+                  
                 }, 
                 child: Text('подтвердить', style: black54(16),)
               ),

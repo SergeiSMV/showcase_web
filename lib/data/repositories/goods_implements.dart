@@ -69,4 +69,30 @@ class GoodsImplements extends GoodsRepository{
     }
   }
 
+  @override
+  Future<Map> backendProduct(int productID, WidgetRef ref) async {
+    String token = await HiveImplements().getToken();
+    final dioClient = DioClient();
+    final dio = dioClient.dio;
+    try {
+      Response response = token.isEmpty ? await dio.get('$getBackProduct/$productID') :
+      await dio.get('$getBackProduct/$productID', options: Options(headers: {'Authorization': 'Bearer $token',}));
+      return response.data ?? {};
+    } on DioException catch (e) {
+      if (e.response != null) {
+        if (e.response!.statusCode == 403 || e.response!.statusCode == 401){
+          GlobalScaffoldMessenger.instance.showSnackBar("Необходимо повторно авторизоваться!", 'error');
+          // UseCaseImplements().unloginProviderRef(ref);
+        }
+        if (e.response!.statusCode == 422){
+          GlobalScaffoldMessenger.instance.showSnackBar("Ошибка валидации!", 'error');
+        }
+        return {};
+      } else {
+        GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: ${e.message}", 'error');
+        return {};
+      }
+    }
+  }
+
 }

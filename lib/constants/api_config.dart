@@ -6,6 +6,7 @@ const String apiURL = 'https://sdk.showcase.eurisco.ru:12443';
 
 const String getBackCategories = '/categories';
 const String getBackProducts = '/products';
+const String getBackProduct = '/product';
 const String auth = '/auth';
 const String cart = '/cart';
 const String getBackRequests = '/requests';

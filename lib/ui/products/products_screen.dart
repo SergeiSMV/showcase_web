@@ -14,7 +14,7 @@ import '../../data/repositories/search_products_implements.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/search_animation.dart';
 import '../../riverpod/products_provider.dart';
-import 'product_views/products_views.dart';
+import 'products_views/products_views.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   final int categoryID;
@@ -224,49 +224,51 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   }
 
   Widget searchField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(
-            color: Colors.transparent
+    return Builder(
+      builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 600;
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 25),
+            border: Border.all(
+              color: Colors.transparent
+            ),
+            color: Colors.amber.shade700,
           ),
-          color: Colors.amber.shade700,
-        ),
-        height: 35,
-        child: TextField(
-          autofocus: false,
-          controller: _searchController,
-          style: whiteText(18),
-          minLines: 1,
-          textAlignVertical: TextAlignVertical.center,
-          cursorColor: Colors.white,
-          decoration: InputDecoration(
-            focusedBorder: InputBorder.none,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            isCollapsed: true,
-            hintStyle: whiteText(16),
-            hintText: 'поиск товаров по категории ${searchCategoryHint.toLowerCase()}',
-            prefixIcon: Icon(MdiIcons.magnify, color: Colors.white,),
-            suffixIcon: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: InkWell(
-                onTap: (){
-                  setState(() {
-                    _searchController.clear();
-                    content = Container();
-                  });
-                },
-                child: Icon(MdiIcons.close, color: Colors.white,)
+          height: 35,
+          child: TextField(
+            autofocus: false,
+            controller: _searchController,
+            style: whiteText(18),
+            minLines: 1,
+            textAlignVertical: TextAlignVertical.center,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              isCollapsed: true,
+              hintStyle: whiteText(16),
+              hintText: 'поиск товаров по категории ${searchCategoryHint.toLowerCase()}',
+              prefixIcon: Icon(MdiIcons.magnify, color: Colors.white,),
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: InkWell(
+                  onTap: (){
+                    setState(() {
+                      _searchController.clear();
+                      content = Container();
+                    });
+                  },
+                  child: Icon(MdiIcons.close, color: Colors.white,)
+                ),
               ),
             ),
+            onChanged: (text) => _onSearchChanged(),
           ),
-          onChanged: (text) => _onSearchChanged(),
-        ),
-      ),
+        );
+      }
     );
   }
 

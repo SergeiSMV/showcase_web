@@ -12,4 +12,6 @@ abstract class GoodsRepository{
 
   Future<List> backendProducts(int categoryID, AutoDisposeFutureProviderRef ref);
 
+  Future<Map> backendProduct(int productID, WidgetRef ref);
+
 }

@@ -104,7 +104,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                       child: Center(
                         child: InkWell(
                         onTap: (){
-                          swithNavigate(index, token);
+                          switchNavigate(index, token);
                         },
                         child: Text(
                           menuList[index].isEmpty? 
@@ -157,7 +157,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                           child: Center(
                             child: InkWell(
                               onTap: (){
-                                swithNavigate(index, token);
+                                switchNavigate(index, token);
                                 Navigator.pop(context);
                               },
                               child: Text(
@@ -181,7 +181,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
     );
   }
 
-  void swithNavigate(int index, String token){
+  void switchNavigate(int index, String token){
     switch (index) {
       case 0:
         ref.read(menuIndexProvider.notifier).state = index;
