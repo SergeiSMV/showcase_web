@@ -7,20 +7,25 @@ import '../../../data/models/product_model/product_model.dart';
 
 Widget productFuturePrice(ProductModel product){
   if (product.futureDate.isEmpty) {
-    return const SizedBox.shrink();
+    return  const SizedBox(
+      height: 25,
+    );
   } else {
-    return Row(
-      children: [
-        Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red,),
-        Expanded(
-          child: Text(
-            '${product.futurePrice}₽ c ${product.futureDate}',
-            style: black54(16), 
-            maxLines: 1, 
-            overflow: TextOverflow.ellipsis,
-          )
-        ),
-      ],
+    return SizedBox(
+      height: 25,
+      child: Row(
+        children: [
+          Icon(MdiIcons.arrowTopRightBoldBox, color: Colors.red,),
+          Expanded(
+            child: Text(
+              '${product.futurePrice}₽ c ${product.futureDate}',
+              style: black54(16), 
+              maxLines: 1, 
+              overflow: TextOverflow.ellipsis,
+            )
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,4 @@
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -20,7 +18,6 @@ class ProductCartButtons extends ConsumerStatefulWidget {
   final ProductModel product;
   const ProductCartButtons({super.key, required this.product});
   
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProductCartButtonsState();
 }
@@ -28,6 +25,7 @@ class ProductCartButtons extends ConsumerStatefulWidget {
 class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
   final CartImplements cartBackend = CartImplements();
   final ValueNotifier<bool> loadingNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<int> cartQuantity = ValueNotifier<int>(0);
   final TextEditingController _quantityController = TextEditingController();
   late FocusNode _focusNode;
 
@@ -36,7 +34,6 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
     super.initState();
     _focusNode = FocusNode();
     focusListener(_focusNode);
-    initQuantity();
   }
 
   @override
@@ -79,22 +76,6 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
     return inCart;
   }
 
-  // инициализируем _quantityController
-  void initQuantity(){
-    log('initim');
-    final startCart = ref.read(cartProvider);
-    for (var product in startCart) {
-      if (product['product_id'] == widget.product.id) {
-        WidgetsBinding.instance.addPostFrameCallback((_){
-          setState(() {
-            _quantityController.text = product['quantity'].toString();
-          });
-        });
-        
-      }
-    }
-  }
-
   // получаем информацию о продукте в корзине
   int productQuantityInCart(List cart){
     int quantity = 0;
@@ -108,18 +89,12 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
   }
 
   // обновляем _quantityController
-  void updateController(){
-    final cart = ref.read(cartProvider);
+  void updateController(List cart){
     for (var product in cart) {
       if (product['product_id'] == widget.product.id && !_focusNode.hasFocus) {
-        if (_quantityController.text != product['quantity'].toString()){
-          if(mounted){
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                _quantityController.text = product['quantity'].toString();
-              });
-            });
-          }
+        if(cartQuantity.value != product['quantity']){
+          cartQuantity.value = product['quantity'];
+          _quantityController.text = cartQuantity.value.toString();
         }
         break;
       }
@@ -132,68 +107,69 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
       builder: (context) {
         final isSmallScreen = MediaQuery.of(context).size.width < 600;
         return Consumer(
-        builder: (context, ref, child) {
-          String token = ref.watch(tokenProvider);
-          final cart = ref.watch(cartProvider);
-          // initQuantity();
-          bool productInCart = checkProductInCart(cart, widget.product.id);
-          return ValueListenableBuilder<bool>(
-            valueListenable: loadingNotifier,
-            builder: (context, loading, child) {
-              return Stack(
-                children: [
-        
-                  productInCart ?
-        
-                  Center(
-                    child: SizedBox(
-                      width: 200,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          quantityControlButton('minus', loading, cart),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () => isSmallScreen ? 
-                                productQuatityFieldSmall(context, _quantityController, widget.product, ref) 
-                                : 
-                                null,
-                              child: SizedBox(
-                                height: 30,
-                                child: Center(
-                                  child: isSmallScreen ? 
-                                    Text(
-                                      loading ? '' : _quantityController.text, 
-                                      style: black(18),
-                                    ) 
-                                    : 
-                                    productQuatityFieldLarge(_focusNode, _quantityController),
-                                ),
-                              ),
-                            )
-                          ),
-                          quantityControlButton('plus', loading)
-                        ],
-                      ),
-                    ),
-                  )
-        
-                  :
-                  // кнопка "в козину"
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    child: addInCartButton(loading, token),
-                  ),
-        
-                  // загрузка
-                  Center(child: loadingCurtain(loading))         
-                ],
-              );
-            }
-          );
-        }
-          );
+          builder: (context, ref, child) {
+            String token = ref.watch(tokenProvider);
+            final cart = ref.watch(cartProvider);
+            updateController(cart);
+            bool productInCart = checkProductInCart(cart, widget.product.id);
+            return ValueListenableBuilder<bool>(
+              valueListenable: loadingNotifier,
+              builder: (context, loading, child) {
+                return Stack(
+                  children: [
+                    productInCart ?
+                    // управление количеством в корзине
+                    cartManager(loading, cart, isSmallScreen) :
+                    // кнопка "в козину"
+                    addInCartButton(loading, token),
+                    // загрузка
+                    Center(child: loadingCurtain(loading))         
+                  ],
+                );
+              }
+            );
+          }
+        );
       }
+    );
+  }
+
+  // управление количеством в корзине
+  Widget cartManager(bool loading, List<dynamic> cart, bool isSmallScreen) {
+    return Center(
+      child: SizedBox(
+        width: 200,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            quantityControlButton('minus', loading, cart),
+            Expanded(
+              child: InkWell(
+                onTap: () => isSmallScreen ? 
+                  productQuatityFieldSmall(context, _quantityController, widget.product, ref) : null,
+                child: SizedBox(
+                  height: 30,
+                  child: Center(
+                    child: isSmallScreen ? 
+                      ValueListenableBuilder<int>(
+                        valueListenable: cartQuantity,
+                        builder: (context, quantity, child) {
+                          return Text(
+                            loading ? '' : quantity.toString(), 
+                            style: black(18),
+                          );
+                        }
+                      ) 
+                      : 
+                      loading ? const Text('') : productQuatityFieldLarge(_focusNode, _quantityController),
+                  ),
+                ),
+              )
+            ),
+            quantityControlButton('plus', loading)
+          ],
+        ),
+      ),
     );
   }
 
@@ -245,7 +221,7 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
                   ref.read(cartBadgesProvider.notifier).state = updateCart.length;
                   ref.read(cartProvider.notifier).state = updateCart;
                   loadingNotifier.value = !loadingNotifier.value;
-                  initQuantity();
+                  // initQuantity();
                 }
               );
             } else {
@@ -292,7 +268,7 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
               ref.read(cartBadgesProvider.notifier).state = updateCart.length;
               ref.read(cartProvider.notifier).state = updateCart;
               loadingNotifier.value = !loadingNotifier.value;
-              initQuantity();
+              // initQuantity();
             }
           )
           : 
@@ -301,7 +277,7 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
               ref.read(cartBadgesProvider.notifier).state = updateCart.length;
               ref.read(cartProvider.notifier).state = updateCart;
               loadingNotifier.value = !loadingNotifier.value;
-              initQuantity();
+              // initQuantity();
             }
           );
         }, 

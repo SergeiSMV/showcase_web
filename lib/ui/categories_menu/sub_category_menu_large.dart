@@ -8,14 +8,14 @@ import '../../data/models/category_model/category_model.dart';
 import '../../riverpod/categories_menu_provider.dart';
 import '../../riverpod/categories_provider.dart';
 
-class SubCategoryMenu extends ConsumerStatefulWidget {
-  const SubCategoryMenu({super.key});
+class SubCategoryMenuLarge extends ConsumerStatefulWidget {
+  const SubCategoryMenuLarge({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SubCategoryMenuState();
 }
 
-class _SubCategoryMenuState extends ConsumerState<SubCategoryMenu> with TickerProviderStateMixin {
+class _SubCategoryMenuState extends ConsumerState<SubCategoryMenuLarge> with TickerProviderStateMixin {
 
   void closeSubMenu() {
     ref.read(subCategoryExpandedProvider.notifier).close();

@@ -1,6 +1,4 @@
 
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +19,6 @@ class GoodsImplements extends GoodsRepository{
       Response response = await dio.get(getBackCategories);
       return response.data ?? [];
     } on DioException catch (e) {
-      log(e.toString(), name: 'ERROR');
       GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: ${e.message}", 'error');
       return [];
     }
@@ -36,7 +33,6 @@ class GoodsImplements extends GoodsRepository{
       Response response = await dio.get('$getBackCategories/$categoryID');
       return response.data ?? [];
     } on DioException catch (e) {
-      log(e.toString(), name: 'ERROR');
       GlobalScaffoldMessenger.instance.showSnackBar("Ошибка: ${e.message}", 'error');
       return [];
     }

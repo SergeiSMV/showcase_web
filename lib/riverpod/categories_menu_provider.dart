@@ -1,42 +1,33 @@
 
-// ignore_for_file: avoid_web_libraries_in_flutter
-
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
+
+import 'categories_provider.dart';
 
 
 
 // isExpanded для меню категорий
 final categoryExpandedProvider = StateNotifierProvider<CategoryExpandedNotifier, bool>((ref) {
-  return CategoryExpandedNotifier(ref);
+  return CategoryExpandedNotifier();
 });
 
 class CategoryExpandedNotifier extends StateNotifier<bool> {
-  final StateNotifierProviderRef _ref;
-  CategoryExpandedNotifier(this._ref) : super(false) { _init(); }
-
-  void _init(){
-    bool result;
-    int mainCategoryID = _ref.read(selectedMainCategoryProvider);
-    mainCategoryID == -1 ? result = false : result = true;
-    state = result;
-  }
+  CategoryExpandedNotifier() : super(true);
 
   void toggle() {
     state = !state;
   }
 
-  void close() {
-    state = false;
-  }
-
-  void open(){
+  void open() {
     state = true;
   }
 
 }
+
+
 
 // isExpanded для меню подкатегорий
 final subCategoryExpandedProvider = StateNotifierProvider<SubCategoryExpandedNotifier, bool>((ref) {
@@ -68,14 +59,16 @@ class SubCategoryExpandedNotifier extends StateNotifier<bool> {
 }
 
 
-// id выбранной материнской категории
+
+// id выбранной метринской категории
 final selectedMainCategoryProvider = StateNotifierProvider<SelectedMainCategoryNotifier, int>((ref) {
-  return SelectedMainCategoryNotifier();
+  return SelectedMainCategoryNotifier(ref);
 });
 
 class SelectedMainCategoryNotifier extends StateNotifier<int> {
+  final StateNotifierProviderRef _ref;
   static const storageKey = 'mainCategoryID';
-  SelectedMainCategoryNotifier() : super(-1) { _loadFromSessionStorage(); }
+  SelectedMainCategoryNotifier(this._ref) : super(0) {_loadFromSessionStorage();}
 
   // Загрузка состояния из sessionStorage
   void _loadFromSessionStorage() {
@@ -86,14 +79,23 @@ class SelectedMainCategoryNotifier extends StateNotifier<int> {
     }
   }
 
-  void toggle(int categoryID) {
-    state = categoryID;
-    _saveToSessionStorage();
-  }
 
-  void reset() {
-    state = -1;
-    _saveToSessionStorage();
+  void toggle(int categoryID) {
+    final mainCategories = _ref.read(categoriesProvider);
+    for (var category in mainCategories) {
+      if (category['category_id'] == categoryID) {
+        category['children'] == null ? 
+          _ref.read(subCategoryExpandedProvider.notifier).close() 
+          : 
+          {
+            _ref.read(selectedSubCategoryProvider.notifier).toggle(categoryID),
+            _ref.read(subCategoryExpandedProvider.notifier).open()
+          };
+        state = categoryID;
+        _saveToSessionStorage();
+        break;
+      }
+    }
   }
 
   // Сохранение состояния в sessionStorage
@@ -104,74 +106,28 @@ class SelectedMainCategoryNotifier extends StateNotifier<int> {
 
 }
 
-// id выбранной подкатегории
+
+
+// id выбранной ПОДкатегории
 final selectedSubCategoryProvider = StateNotifierProvider<SelectedSubCategoryNotifier, int>((ref) {
   return SelectedSubCategoryNotifier();
 });
 
 class SelectedSubCategoryNotifier extends StateNotifier<int> {
-  static const storageKey = 'subCategoryID';
-  SelectedSubCategoryNotifier() : super(-1) { _loadFromSessionStorage(); }
-
-  // Загрузка состояния из sessionStorage
-  void _loadFromSessionStorage() {
-    final jsonString = window.sessionStorage[storageKey];
-    if (jsonString != null) {
-      int id = int.parse(jsonString);
-      state = id;
-    }
-  }
+  SelectedSubCategoryNotifier() : super(-1);
 
   void toggle(int subCategoryID) {
     state = subCategoryID;
-    _saveToSessionStorage();
-  }
-
-  void reset() {
-    state = -1;
-    _saveToSessionStorage();
-  }
-
-  // Сохранение состояния в sessionStorage
-  void _saveToSessionStorage() {
-    final jsonString = json.encode(state);
-    window.sessionStorage[storageKey] = jsonString;
   }
 
 }
 
-
-/*
-// навигация для подкатегорий ()
-final categoriesIdPathProvider = StateNotifierProvider<CategoriesIdPathNotifier, List>((ref){
-  return CategoriesIdPathNotifier();
-});
-
-class CategoriesIdPathNotifier extends StateNotifier<List> {
-  CategoriesIdPathNotifier() : super([]);
-
-  void addPath(int categoryID) {
-    state = [...state, categoryID];
-  }
-
-  void clear() {
-    state = [];
-  }
-
-  void removeLastPath() {
-    if (state.isNotEmpty) {
-      state = List.from(state)..removeLast();
-    }
-  }
-}
-*/
 
 
 // справочник категорий id и наименование
 final categoriesDirectoryProvider = StateNotifierProvider<CategoriesDirectoryNotifier, List>((ref){
   return CategoriesDirectoryNotifier();
 });
-
 
 class CategoriesDirectoryNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   static const storageKey = 'categoriesData';

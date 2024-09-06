@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:showcase_web/widgets/loading.dart';
 
-import '../../../constants/fonts.dart';
-import '../../../data/models/product_model/product_model.dart';
-import '../../../data/repositories/goods_implements.dart';
-import '../../../riverpod/menu_index_provider.dart';
-import '../products_widgets/product_cart_buttons/product_cart_buttons.dart';
-import '../products_widgets/product_description.dart';
-import '../products_widgets/product_future_price.dart';
-import '../products_widgets/product_images.dart';
-import '../products_widgets/product_images_indicator.dart';
-import '../products_widgets/product_name.dart';
-import '../products_widgets/product_price.dart';
+import '../../constants/fonts.dart';
+import '../../data/models/product_model/product_model.dart';
+import '../../data/repositories/goods_implements.dart';
+import '../../riverpod/menu_index_provider.dart';
+import 'products_widgets/product_cart_buttons/product_cart_buttons.dart';
+import 'products_widgets/product_description.dart';
+import 'products_widgets/product_future_price.dart';
+import 'products_widgets/product_images.dart';
+import 'products_widgets/product_images_indicator.dart';
+import 'products_widgets/product_name.dart';
+import 'products_widgets/product_price.dart';
 
 class ProductCard extends ConsumerStatefulWidget {
   final int productID;
@@ -108,7 +108,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                     vertical: 15, 
                     horizontal: isSmallScreen ? 20 : 10
                   ),
-                  child: productName(product.name),
+                  child: productName(product.name, black54(18, FontWeight.bold)),
                 ),
                       
                 // описание продукта

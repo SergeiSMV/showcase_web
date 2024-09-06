@@ -10,7 +10,7 @@ import '../../../../riverpod/cart_provider.dart';
 import '../../../../widgets/scaffold_messenger.dart';
 
 // поле ввода количества !только для маленького экрана
-productQuatityFieldSmall(BuildContext mainContext, TextEditingController controller, ProductModel currentProduct, WidgetRef ref){
+Future productQuatityFieldSmall(BuildContext mainContext, TextEditingController controller, ProductModel currentProduct, WidgetRef ref){
   return showModalBottomSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -30,7 +30,7 @@ productQuatityFieldSmall(BuildContext mainContext, TextEditingController control
             const SizedBox(height: 40,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 70),
-              child: Align(alignment: Alignment.center, child: Text(currentProduct.name, style: black54(18, FontWeight.bold),)),
+              child: Align(alignment: Alignment.center, child: Text(currentProduct.name, style: black54(16, FontWeight.bold),)),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
@@ -82,17 +82,16 @@ productQuatityFieldSmall(BuildContext mainContext, TextEditingController control
                   final CartImplements cartBackend = CartImplements();
                   try {
                     exact = controller.text.isEmpty ? 0 : int.parse(controller.text);
-                    exact < 0 ? 
-                      GlobalScaffoldMessenger.instance.showSnackBar("Значение не может быть отрицательным!", 'error') 
-                      :
-                      cartBackend.putExact(currentProduct.id, exact, ref).then(
-                        (updateCart) { 
-                          ref.read(cartBadgesProvider.notifier).state = updateCart.length;
-                          ref.read(cartProvider.notifier).state = updateCart;
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        }
-                      );
+                    if (exact < 0) {
+                      GlobalScaffoldMessenger.instance.showSnackBar("Значение не может быть отрицательным!", 'error');
+                    } else {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                      final updateCart = await cartBackend.putExact(currentProduct.id, exact, ref);
+                      ref.read(cartBadgesProvider.notifier).state = updateCart.length;
+                      ref.read(cartProvider.notifier).state = updateCart;
+                    }
                   } catch (_) {
                     GlobalScaffoldMessenger.instance.showSnackBar("Не верный формат количества!", 'error');
                   }

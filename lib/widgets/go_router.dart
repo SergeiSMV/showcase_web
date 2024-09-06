@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../ui/auth.dart';
-import '../ui/products/product_card/product_card.dart';
+import '../ui/catalog.dart';
+import '../ui/products/product_card.dart';
 import '../ui/products/products_global_search.dart';
-import '../ui/products/products_screen.dart';
 import '../ui/home.dart';
 import '../ui/registration/registration.dart';
 import 'shell_route_scaffold.dart';
@@ -35,46 +35,14 @@ final GoRouter router = GoRouter(
             ),
           ]
         ),
-
-        /*
-        GoRoute(
-          path: '/categories',
-          builder: (context, state) => const CategoriesScreen(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: CategoriesScreen()),
-          routes: [
-            GoRoute(
-              path: ':categoryId',
-              pageBuilder: (context, state) {
-                final categoryID = int.parse(state.pathParameters['categoryId']!);
-                return NoTransitionPage<void>(child: SubCategoriesScreen(categoryID: categoryID,));
-              },
-              routes: const [
-                /*
-                GoRoute(
-                  path: 'products',
-                  pageBuilder: (context, state) {
-                    final extra = state.extra as Map<String, dynamic>;
-                    final mainCategory = extra['mainCategory'] as String;
-                    final categoryID = extra['categoryID'] as int;
-                    return NoTransitionPage<void>(child: ProductsScreen(categoryID: categoryID, mainCategory: mainCategory,));
-                  },
-                ),
-                */
-              ]
-            ),
-          ]
-        ),
-        */
-
-
         GoRoute(
           path: '/products/:categoryId',
           pageBuilder: (context, state) {
             final categoryID = int.parse(state.pathParameters['categoryId']!);
-            return NoTransitionPage<void>(child: ProductsScreen(key: ValueKey(categoryID), categoryID: categoryID,));
+            // return NoTransitionPage<void>(child: ProductsScreen(key: ValueKey(categoryID), categoryID: categoryID,));
+            return NoTransitionPage<void>(child: Catalog(categoryID: categoryID,));
           },
         ),
-
         GoRoute(
           path: '/product/:productId',
           pageBuilder: (context, state) {
@@ -82,7 +50,6 @@ final GoRouter router = GoRouter(
             return NoTransitionPage<void>(child: ProductCard(key: ValueKey(productID), productID: productID));
           },
         ),
-
         GoRoute(
           path: '/global',
           builder: (context, state) => const ProductGlobalSearch(),

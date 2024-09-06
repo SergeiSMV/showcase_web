@@ -1,14 +1,14 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../constants/fonts.dart';
 
-Widget productName(String name){
+Widget productName(String name, TextStyle style){
   return Align(
-    alignment: Alignment.centerLeft,
+    alignment: Alignment.topLeft,
     child: Text(
       name,
-      style: black54(18, FontWeight.bold),
+      style: style,
+      maxLines: 3,
     )
   );
 }

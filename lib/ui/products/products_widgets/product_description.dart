@@ -20,10 +20,13 @@ Widget productDescription(ProductModel product) {
             ),
           ),
           const SizedBox(height: 10,),
-          Text(
-            product.discription.isEmpty ? 'описание отсутствует...' : product.discription,
-            style: black54(15),
-            overflow: TextOverflow.fade,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              product.discription.isEmpty ? 'описание отсутствует...' : product.discription,
+              style: black54(15),
+              overflow: TextOverflow.fade,
+            ),
           ),
         ],
       ),

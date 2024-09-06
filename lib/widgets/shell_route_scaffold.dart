@@ -12,6 +12,7 @@ import '../constants/menu_list.dart';
 import '../data/models/category_model/category_model.dart';
 import '../data/repositories/hive_implements.dart';
 import '../riverpod/cart_provider.dart';
+import '../riverpod/categories_menu_provider.dart';
 import '../riverpod/categories_provider.dart';
 import '../riverpod/token_provider.dart';
 import 'go_router.dart';
@@ -191,6 +192,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
         ref.read(menuIndexProvider.notifier).state = index;
         List allCategories = ref.read(categoriesProvider);
         CategoryModel category = CategoryModel(categories: allCategories[0]);
+        ref.read(selectedMainCategoryProvider.notifier).toggle(category.id);
         GoRouter.of(context).go('/products/${category.id}');
         break;
       case 2:
