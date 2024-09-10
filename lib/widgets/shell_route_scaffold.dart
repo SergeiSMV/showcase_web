@@ -50,6 +50,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                 appBar: shellAppBar(isSmallScreen, menuIndex, token),
                 drawer: shellDrawer(menuIndex, token),
                 body: widget.child,
+                drawerEnableOpenDragGesture: false,
               ),
             );
           }
