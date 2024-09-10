@@ -8,10 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:showcase_web/data/repositories/hive_implements.dart';
 import 'dart:html' as html;
 
-import '../constants/fonts.dart';
-import '../data/repositories/auth_implements.dart';
-import '../riverpod/cart_provider.dart';
-import '../riverpod/token_provider.dart';
+import '../../constants/fonts.dart';
+import '../../data/repositories/auth_implements.dart';
+import '../../riverpod/cart_provider.dart';
+import '../../riverpod/token_provider.dart';
 
 class Auth extends ConsumerStatefulWidget {
   const Auth({super.key});

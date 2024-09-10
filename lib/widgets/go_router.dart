@@ -2,7 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../ui/auth.dart';
+import '../data/models/request_model/request_model.dart';
+import '../data/models/response_model/response_model.dart';
+import '../ui/account/account.dart';
+import '../ui/account/cabinet/addresses.dart';
+import '../ui/account/cabinet/request_detail.dart';
+import '../ui/account/cabinet/response_detail.dart';
+import '../ui/auth/auth.dart';
+import '../ui/cart/additional_info.dart';
+import '../ui/cart/cart.dart';
 import '../ui/catalog.dart';
 import '../ui/products/product_card.dart';
 import '../ui/products/products_global_search.dart';
@@ -54,36 +62,43 @@ final GoRouter router = GoRouter(
           path: '/global',
           builder: (context, state) => const ProductGlobalSearch(),
         ),
-        
-        /*
         GoRoute(
           path: '/cart',
-          builder: (context, state) => const CartScreen(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: CartScreen()),
+          builder: (context, state) => const Cart(),
+          pageBuilder: (context, state) => const NoTransitionPage<void>(child: Cart()),
+        ),
+        GoRoute(
+          path: '/additinal_info',
+          builder: (context, state) => const AdditionalInfo(),
+          pageBuilder: (context, state) => const NoTransitionPage<void>(child: AdditionalInfo()),
         ),
         GoRoute(
           path: '/account',
-          builder: (context, state) => const AccountScreen(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: AccountScreen()),
+          builder: (context, state) => const Account(),
+          pageBuilder: (context, state) => const NoTransitionPage<void>(child: Account()),
         ),
         GoRoute(
-          path: '/request_detail',
-          builder: (context, state) => const SearchScreen(),
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>;
-            final request = extra['request'] as RequestModel;
-            return NoTransitionPage<void>(child: RequestDetail(request: request));
-          }
+          path: '/addresses',
+          builder: (context, state) => const Addresses(),
+          pageBuilder: (context, state) => const NoTransitionPage<void>(child: Addresses()),
         ),
         GoRoute(
           path: '/response_detail',
-          builder: (context, state) => const SearchScreen(),
           pageBuilder: (context, state) {
             final extra = state.extra as Map<String, dynamic>;
             final response = extra['response'] as ResponseModel;
             return NoTransitionPage<void>(child: ResponseDetail(response: response,));
           }
         ),
+        GoRoute(
+          path: '/request_detail',
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            final request = extra['request'] as RequestModel;
+            return NoTransitionPage<void>(child: RequestDetail(request: request));
+          }
+        ),
+        /*
         GoRoute(
           path: '/search',
           builder: (context, state) => const SearchScreen(),
@@ -99,16 +114,7 @@ final GoRouter router = GoRouter(
             return NoTransitionPage<void>(child: SearchByCategoryScreen(mainCategory: mainCategory, mainCategoryID: categoryID,));
           }
         ),
-        GoRoute(
-          path: '/addresses',
-          builder: (context, state) => const ShipsView(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: ShipsView()),
-        ),
-        GoRoute(
-          path: '/additinal_info',
-          builder: (context, state) => const AdditionalInfo(),
-          pageBuilder: (context, state) => const NoTransitionPage<void>(child: AdditionalInfo()),
-        ),
+        
         */
       ],
     ),

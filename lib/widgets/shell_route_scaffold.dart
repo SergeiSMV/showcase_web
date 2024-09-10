@@ -1,14 +1,15 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:showcase_web/constants/fonts.dart';
 import 'package:showcase_web/riverpod/menu_index_provider.dart';
-// ignore: unused_import
+import 'package:badges/badges.dart' as badges;
+// ignore: unused_import, avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 import '../constants/menu_list.dart';
+import '../constants/other.dart';
 import '../data/models/category_model/category_model.dart';
 import '../data/repositories/hive_implements.dart';
 import '../riverpod/cart_provider.dart';
@@ -59,7 +60,7 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
 
   AppBar shellAppBar(bool isSmallScreen, int menuIndex, String token) {
     return AppBar(
-      toolbarHeight: 80,
+      toolbarHeight: appBarHeight,
       backgroundColor: Colors.green.shade300,
       automaticallyImplyLeading: false,
       title: Row(
@@ -107,7 +108,24 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                         onTap: (){
                           switchNavigate(index, token);
                         },
-                        child: Text(
+                        child: index == 2 ?
+                        Consumer(
+                          builder: (context, ref, child) {
+                            int count = ref.watch(cartBadgesProvider);
+                            return badges.Badge(
+                              badgeStyle: const badges.BadgeStyle(
+                                badgeColor: Colors.white
+                              ),
+                              position: badges.BadgePosition.bottomEnd(end: -20, bottom: 8),
+                              badgeAnimation: const badges.BadgeAnimation.scale(),
+                              showBadge: count == 0 ? false : true,
+                              badgeContent: Text(count.toString(), style: black54(12)),
+                              child: Text(menuList[index], style: whiteText(16, FontWeight.w300)),
+                            );
+                          }
+                        )
+                        :
+                        Text(
                           menuList[index].isEmpty? 
                             token.isEmpty ? 'войти' : 'выйти' 
                             :
@@ -161,7 +179,24 @@ class _ShellRouteScaffoldState extends ConsumerState<ShellRouteScaffold> with Si
                                 switchNavigate(index, token);
                                 Navigator.pop(context);
                               },
-                              child: Text(
+                              child: index == 2 ?
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  int count = ref.watch(cartBadgesProvider);
+                                  return badges.Badge(
+                                    badgeStyle: const badges.BadgeStyle(
+                                      badgeColor: Colors.white
+                                    ),
+                                    position: badges.BadgePosition.bottomEnd(end: -22, bottom: 3),
+                                    badgeAnimation: const badges.BadgeAnimation.scale(),
+                                    showBadge: count == 0 ? false : true,
+                                    badgeContent: Text(count.toString(), style: black54(12)),
+                                    child: Text(menuList[index], style: menuIndex == index ? whiteText(16) : black54(16)),
+                                  );
+                                }
+                              )
+                              :
+                              Text(
                                 menuList[index].isEmpty? 
                                   token.isEmpty ? 'войти' : 'выйти' 
                                   :

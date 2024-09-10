@@ -14,4 +14,8 @@ abstract class CartRepository {
 
   Future<List> putExact(int productID, int exact, WidgetRef ref);
 
+  Future<List> putDelete(int productID, WidgetRef ref);
+
+  Future<void> repeatOrder(Map data, WidgetRef ref);
+
 }

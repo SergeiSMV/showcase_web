@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'product_model.dart';
+part of 'response_product_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,44 +14,45 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ProductModel _$ProductModelFromJson(Map<String, dynamic> json) {
-  return _ProductModel.fromJson(json);
+ResponseProductModel _$ResponseProductModelFromJson(Map<String, dynamic> json) {
+  return _ResponseProductModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ProductModel {
+mixin _$ResponseProductModel {
   Map<String, dynamic> get product => throw _privateConstructorUsedError;
 
-  /// Serializes this ProductModel to a JSON map.
+  /// Serializes this ResponseProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of ProductModel
+  /// Create a copy of ResponseProductModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ProductModelCopyWith<ProductModel> get copyWith =>
+  $ResponseProductModelCopyWith<ResponseProductModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProductModelCopyWith<$Res> {
-  factory $ProductModelCopyWith(
-          ProductModel value, $Res Function(ProductModel) then) =
-      _$ProductModelCopyWithImpl<$Res, ProductModel>;
+abstract class $ResponseProductModelCopyWith<$Res> {
+  factory $ResponseProductModelCopyWith(ResponseProductModel value,
+          $Res Function(ResponseProductModel) then) =
+      _$ResponseProductModelCopyWithImpl<$Res, ResponseProductModel>;
   @useResult
   $Res call({Map<String, dynamic> product});
 }
 
 /// @nodoc
-class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
-    implements $ProductModelCopyWith<$Res> {
-  _$ProductModelCopyWithImpl(this._value, this._then);
+class _$ResponseProductModelCopyWithImpl<$Res,
+        $Val extends ResponseProductModel>
+    implements $ResponseProductModelCopyWith<$Res> {
+  _$ResponseProductModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ProductModel
+  /// Create a copy of ResponseProductModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -68,32 +69,32 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
 }
 
 /// @nodoc
-abstract class _$$ProductModelImplCopyWith<$Res>
-    implements $ProductModelCopyWith<$Res> {
-  factory _$$ProductModelImplCopyWith(
-          _$ProductModelImpl value, $Res Function(_$ProductModelImpl) then) =
-      __$$ProductModelImplCopyWithImpl<$Res>;
+abstract class _$$ResponseProductModelImplCopyWith<$Res>
+    implements $ResponseProductModelCopyWith<$Res> {
+  factory _$$ResponseProductModelImplCopyWith(_$ResponseProductModelImpl value,
+          $Res Function(_$ResponseProductModelImpl) then) =
+      __$$ResponseProductModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<String, dynamic> product});
 }
 
 /// @nodoc
-class __$$ProductModelImplCopyWithImpl<$Res>
-    extends _$ProductModelCopyWithImpl<$Res, _$ProductModelImpl>
-    implements _$$ProductModelImplCopyWith<$Res> {
-  __$$ProductModelImplCopyWithImpl(
-      _$ProductModelImpl _value, $Res Function(_$ProductModelImpl) _then)
+class __$$ResponseProductModelImplCopyWithImpl<$Res>
+    extends _$ResponseProductModelCopyWithImpl<$Res, _$ResponseProductModelImpl>
+    implements _$$ResponseProductModelImplCopyWith<$Res> {
+  __$$ResponseProductModelImplCopyWithImpl(_$ResponseProductModelImpl _value,
+      $Res Function(_$ResponseProductModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ProductModel
+  /// Create a copy of ResponseProductModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? product = null,
   }) {
-    return _then(_$ProductModelImpl(
+    return _then(_$ResponseProductModelImpl(
       product: null == product
           ? _value._product
           : product // ignore: cast_nullable_to_non_nullable
@@ -104,13 +105,14 @@ class __$$ProductModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProductModelImpl extends _ProductModel {
-  const _$ProductModelImpl({required final Map<String, dynamic> product})
+class _$ResponseProductModelImpl extends _ResponseProductModel {
+  const _$ResponseProductModelImpl(
+      {required final Map<String, dynamic> product})
       : _product = product,
         super._();
 
-  factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProductModelImplFromJson(json);
+  factory _$ResponseProductModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ResponseProductModelImplFromJson(json);
 
   final Map<String, dynamic> _product;
   @override
@@ -122,14 +124,14 @@ class _$ProductModelImpl extends _ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(product: $product)';
+    return 'ResponseProductModel(product: $product)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProductModelImpl &&
+            other is _$ResponseProductModelImpl &&
             const DeepCollectionEquality().equals(other._product, _product));
   }
 
@@ -138,37 +140,40 @@ class _$ProductModelImpl extends _ProductModel {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_product));
 
-  /// Create a copy of ProductModel
+  /// Create a copy of ResponseProductModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProductModelImplCopyWith<_$ProductModelImpl> get copyWith =>
-      __$$ProductModelImplCopyWithImpl<_$ProductModelImpl>(this, _$identity);
+  _$$ResponseProductModelImplCopyWith<_$ResponseProductModelImpl>
+      get copyWith =>
+          __$$ResponseProductModelImplCopyWithImpl<_$ResponseProductModelImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProductModelImplToJson(
+    return _$$ResponseProductModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _ProductModel extends ProductModel {
-  const factory _ProductModel({required final Map<String, dynamic> product}) =
-      _$ProductModelImpl;
-  const _ProductModel._() : super._();
+abstract class _ResponseProductModel extends ResponseProductModel {
+  const factory _ResponseProductModel(
+          {required final Map<String, dynamic> product}) =
+      _$ResponseProductModelImpl;
+  const _ResponseProductModel._() : super._();
 
-  factory _ProductModel.fromJson(Map<String, dynamic> json) =
-      _$ProductModelImpl.fromJson;
+  factory _ResponseProductModel.fromJson(Map<String, dynamic> json) =
+      _$ResponseProductModelImpl.fromJson;
 
   @override
   Map<String, dynamic> get product;
 
-  /// Create a copy of ProductModel
+  /// Create a copy of ResponseProductModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ProductModelImplCopyWith<_$ProductModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ResponseProductModelImplCopyWith<_$ResponseProductModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

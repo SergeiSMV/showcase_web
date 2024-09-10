@@ -1,9 +1,10 @@
 
+
 import 'package:flutter/material.dart';
 
 import '../../../../constants/fonts.dart';
 
-Widget productQuatityFieldLarge(FocusNode focusNode, TextEditingController controller){
+Widget cartQuatityFieldLarge(FocusNode focusNode, TextEditingController controller){
   return Container(
     height: 33,
     padding: const EdgeInsets.only(bottom: 8),

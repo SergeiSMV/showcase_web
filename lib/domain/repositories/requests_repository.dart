@@ -5,4 +5,6 @@ abstract class RequestsRepository {
 
   Future<List> backendGetRequests(AutoDisposeFutureProviderRef ref);
 
+  Future<void> newRequests(int shipID, String comment, WidgetRef ref);
+
 }
