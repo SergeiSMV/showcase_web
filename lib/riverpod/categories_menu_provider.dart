@@ -25,6 +25,10 @@ class CategoryExpandedNotifier extends StateNotifier<bool> {
     state = true;
   }
 
+  void close() {
+    state = false;
+  }
+
 }
 
 

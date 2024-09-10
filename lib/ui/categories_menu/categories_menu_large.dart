@@ -38,11 +38,17 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenuLarge> with Ticke
       builder: (context, ref, child) {
         bool catIsExpanded = ref.watch(categoryExpandedProvider);
         bool subCatIsExpanded = ref.watch(subCategoryExpandedProvider);
-        return Row(
-          children: [
-            categoryMenu(catIsExpanded, subCatIsExpanded),
-            subCategoriesMenu(subCatIsExpanded)
-          ],
+        return GestureDetector(
+          onHorizontalDragEnd: (details) {
+            ref.read(categoryExpandedProvider.notifier).close();
+            ref.read(subCategoryExpandedProvider.notifier).close();
+          },
+          child: Row(
+            children: [
+              categoryMenu(catIsExpanded, subCatIsExpanded),
+              subCategoriesMenu(subCatIsExpanded)
+            ],
+          ),
         );
       },
     );
