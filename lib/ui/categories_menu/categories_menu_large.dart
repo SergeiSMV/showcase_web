@@ -34,23 +34,30 @@ class _CategoriesMenuState extends ConsumerState<CategoriesMenuLarge> with Ticke
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        bool catIsExpanded = ref.watch(categoryExpandedProvider);
-        bool subCatIsExpanded = ref.watch(subCategoryExpandedProvider);
-        return GestureDetector(
-          onHorizontalDragEnd: (details) {
-            ref.read(categoryExpandedProvider.notifier).close();
-            ref.read(subCategoryExpandedProvider.notifier).close();
+    return Builder(
+      builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 900;
+        return Consumer(
+          builder: (context, ref, child) {
+            bool catIsExpanded = ref.watch(categoryExpandedProvider);
+            bool subCatIsExpanded = ref.watch(subCategoryExpandedProvider);
+            return GestureDetector(
+              onHorizontalDragEnd: (details) {
+                if(isSmallScreen){
+                  ref.read(categoryExpandedProvider.notifier).close();
+                  ref.read(subCategoryExpandedProvider.notifier).close();
+                }
+              },
+              child: Row(
+                children: [
+                  categoryMenu(catIsExpanded, subCatIsExpanded),
+                  subCategoriesMenu(subCatIsExpanded)
+                ],
+              ),
+            );
           },
-          child: Row(
-            children: [
-              categoryMenu(catIsExpanded, subCatIsExpanded),
-              subCategoriesMenu(subCatIsExpanded)
-            ],
-          ),
         );
-      },
+      }
     );
   }
 

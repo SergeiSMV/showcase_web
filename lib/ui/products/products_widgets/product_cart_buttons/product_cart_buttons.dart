@@ -40,6 +40,7 @@ class _ProductCartButtonsState extends ConsumerState<ProductCartButtons> {
   void dispose(){
     _quantityController.dispose();
     _focusNode.dispose();
+    loadingNotifier.dispose();
     super.dispose();
   }
 
