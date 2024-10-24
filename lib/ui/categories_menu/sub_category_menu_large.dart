@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -50,10 +51,11 @@ class _SubCategoryMenuState extends ConsumerState<SubCategoryMenuLarge> with Tic
                         children: [
                           
                           // кнопка назад в субменю
-                          subCategoryData['motherCategory'] == 0 ? const Spacer() :
+                          subCategoryData['motherCategory'] == 0 || subCategoryData['motherCategory'] == null ? const Spacer() :
                           Expanded(
                             child: InkWell(
                               onTap: (){
+                                // log(subCategoryData['motherSubCategory'].toString(), name: 'subCategoryData');
                                 subCategoryData['motherSubCategory'] == 0 ?
                                 ref.read(selectedSubCategoryProvider.notifier).toggle(subCategoryData['motherCategory']) :
                                 ref.read(selectedSubCategoryProvider.notifier).toggle(subCategoryData['motherSubCategory']);

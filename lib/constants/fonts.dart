@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-TextStyle black(double size, [FontWeight weight = FontWeight.normal]) => GoogleFonts.sourceSans3(color: Colors.black87, fontSize: size, fontWeight: weight, height: 0.9);
+TextStyle black(double size, [FontWeight weight = FontWeight.normal, double height = 0.9]) => GoogleFonts.sourceSans3(color: Colors.black87, fontSize: size, fontWeight: weight, height: height);
 TextStyle black54(double size, [FontWeight weight = FontWeight.normal]) => GoogleFonts.sourceSans3(color: Colors.black54, fontSize: size, fontWeight: weight, height: 0.9);
 TextStyle whiteText(double size, [FontWeight weight = FontWeight.normal]) => GoogleFonts.sourceSans3(color: Colors.white, fontSize: size, fontWeight: weight, height: 0.9);
 TextStyle grey(double size, [FontWeight weight = FontWeight.normal]) => GoogleFonts.sourceSans3(color: Colors.grey, fontSize: size, fontWeight: weight, height: 0.9);
