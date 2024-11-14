@@ -43,7 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: SizedBox(
             width: 400,
             child: SingleChildScrollView(
@@ -68,7 +68,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Для начала работы необходимо ',
+                      text: 'Для начала работы нажмите ',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
                       children: <TextSpan>[
                         TextSpan(
@@ -81,11 +81,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                         ),
                         TextSpan(
-                          text: ' под своей учетной записью. Eсли у Вас нет учетной записи, необходимо ',
+                          text: '. Если нет учетной записи - ',
                           style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
                         ),
                         TextSpan(
-                          text: 'подать заявку ', // Кликабельное слово
+                          text: 'подайте заявку ', // Кликабельное слово
                           style: blue(14),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -94,7 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                         ),
                         TextSpan(
-                          text: 'на регистрацию. Укажите ИНН организации и контактный номер телефона. C Вами свяжется наш оператор, подтвердит регистрацию и предоставит все необходимые данные для входа.',
+                          text: 'на регистрацию: в форме "Регистрация", указав ИНН организации и контактный номер телефона. C Вами свяжется наш оператор, подтвердит регистрацию и предоставит учётные данные для входа.',
                           style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
                         ),
                       ],
@@ -111,25 +111,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Для просмотра каталога товаров перейдите в раздел ',
+                      text: 'Просматривайте товары по категориям или используйте "ПОИСК". Нажатие (клик, тап) на товарную позицию открывает подробную информацию. Выбрав необходимое количество товара, нажмите на иконку "в корзину".',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'каталог', // Кликабельное слово
-                          style: blue(14),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              ref.read(menuIndexProvider.notifier).state = 1;
-                              List allCategories = ref.read(categoriesProvider);
-                              CategoryModel category = CategoryModel(categories: allCategories[0]);
-                              ref.read(selectedMainCategoryProvider.notifier).toggle(category.id);
-                              GoRouter.of(context).go('/products/${category.id}');
-                            },
-                        ),
-                        TextSpan(
-                          text: '. Просматривайте товары по категориям или используйте поиск для быстрого нахождения нужного товара. Чтобы выбрать товар, нажмите на него для просмотра подробной информации. Вы можете выбрать количество и добавить товар в корзину, нажав кнопку «в корзину».',
-                          style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
-                        ),
+                      children: const <TextSpan>[
+                        // TextSpan(
+                        //   text: 'каталог', // Кликабельное слово
+                        //   style: blue(14),
+                        //   recognizer: TapGestureRecognizer()
+                        //     ..onTap = () {
+                        //       ref.read(menuIndexProvider.notifier).state = 1;
+                        //       List allCategories = ref.read(categoriesProvider);
+                        //       CategoryModel category = CategoryModel(categories: allCategories[0]);
+                        //       ref.read(selectedMainCategoryProvider.notifier).toggle(category.id);
+                        //       GoRouter.of(context).go('/products/${category.id}');
+                        //     },
+                        // ),
+                        // TextSpan(
+                        //   text: '. Просматривайте товары по категориям или используйте поиск для быстрого нахождения нужного товара. Чтобы выбрать товар, нажмите на него для просмотра подробной информации. Вы можете выбрать количество и добавить товар в корзину, нажав кнопку «в корзину».',
+                        //   style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
+                        // ),
                       ],
                     ),
                   ),
@@ -146,22 +146,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Для управления товарами в корзине перейдите в раздел ',
+                      text: 'Корзина содержит список всех добавленных товаров. Количество товара меняют кнопки «+» или «-» рядом с каждым позицией в корзине. Для удаления товара из корзины, нажмите на значок корзины рядом с ним.',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'корзина', // Кликабельное слово
-                          style: blue(14),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              GoRouter.of(context).go('/cart');
-                              ref.read(menuIndexProvider.notifier).state = 2;
-                            },
-                        ),
-                        TextSpan(
-                          text: '. В корзине вы увидите список всех добавленных товаров. Для изменения количества товара используйте кнопки «+» или «-» рядом с каждым товаром. Чтобы удалить товар, нажмите на значок корзины рядом с ним.',
-                          style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
-                        ),
+                      children: const <TextSpan>[
+                        // TextSpan(
+                        //   text: 'корзина', // Кликабельное слово
+                        //   style: blue(14),
+                        //   recognizer: TapGestureRecognizer()
+                        //     ..onTap = () {
+                        //       GoRouter.of(context).go('/cart');
+                        //       ref.read(menuIndexProvider.notifier).state = 2;
+                        //     },
+                        // ),
+                        // TextSpan(
+                        //   text: '. В корзине вы увидите список всех добавленных товаров. Для изменения количества товара используйте кнопки «+» или «-» рядом с каждым товаром. Чтобы удалить товар, нажмите на значок корзины рядом с ним.',
+                        //   style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
+                        // ),
                       ],
                     ),
                   ),
@@ -172,12 +172,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(height: 10,),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text('Заказ', style: black(18),),
+                    child: Text('Оформление заказа', style: black(18),),
                   ),
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Убедитесь, что в корзине находятся все нужные товары и нажмите "заказать". Выберите адрес доставки из списка или добавьте новый адрес. При необходимости оставьте комментарий к заказу и нажмите "подтвердить и отправить". После оформления заявка отразится в личном кабинете в разделе "мои заказы".',
+                      text: 'Нажмите "заказать". Выберите адрес доставки из вашего списка или добавьте новый адрес. При необходимости оставьте комментарий к заказу и нажмите "подтвердить и отправить". После оформления заявка отразится в личном кабинете в разделе "мои заказы".',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
                     ),
                   ),
@@ -192,22 +192,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Для контроля заявок и отгрузок перейдите в ',
+                      text: 'Контроль заявок и отгрузок ведется в кабинете. Содержание кабинета: "мои отгрузки", "мои заказы" и "адреса".',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'кабинет', // Кликабельное слово
-                          style: blue(14),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              GoRouter.of(context).go('/account');
-                              ref.read(menuIndexProvider.notifier).state = 3;
-                            },
-                        ),
-                        TextSpan(
-                          text: '. Здесь вы увидите разделы "мои отгрузки", "мои заказы" и "адреса".',
-                          style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
-                        ),
+                      children: const <TextSpan>[
+                        // TextSpan(
+                        //   text: 'кабинет', // Кликабельное слово
+                        //   style: blue(14),
+                        //   recognizer: TapGestureRecognizer()
+                        //     ..onTap = () {
+                        //       GoRouter.of(context).go('/account');
+                        //       ref.read(menuIndexProvider.notifier).state = 3;
+                        //     },
+                        // ),
+                        // TextSpan(
+                        //   text: '. Здесь вы увидите разделы "мои отгрузки", "мои заказы" и "адреса".',
+                        //   style: black(14, FontWeight.normal, 1.1), // Продолжение основного текста
+                        // ),
                       ],
                     ),
                   ),
@@ -223,7 +223,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Чтобы просматривать отгруженные заказы в личном кабинете перейдите в раздел «мои отгрузки». Здесь вы найдете информацию обо всех заказах, которые были обработаны и отгружены. Вы можете отслеживать доставку товаров.',
+                      text: '«Мои отгрузки» содержит информацию обо всех заказах, которые были уже обработаны и отгружены.',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
                     ),
                   ),
@@ -239,7 +239,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Чтобы просматривать текущие заказы в личном кабинете перейдите в раздел "мои заказы". Здесь отображаются все заказы, которые в обработке, но еще не отгружены. Вы можете просматривать детали заказа и отслеживать их статус.',
+                      text: '"Мои заказы" содержит информацию обо всех заказах, которые в обработке, но еще НЕ отгружены. Здесь отображаются детали текущих заказов и отслеживаются их статус.',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
                     ),
                   ),
@@ -254,7 +254,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
-                      text: 'Для управления адресами доставки в личном кабинете выберите раздел «адреса». Здесь вы можете добавить новый адрес, нажав на кнопку «+». Для установки ареса по умолчанию установите галку рядом с выбраным адресом. Для удаления адреса нажмите на значок удаления "-" рядом с ним',
+                      text: 'В раздел «адреса» можно добавить новый адрес: кнопку «+», Удалить адрес: кнопку «-», Рядом главным с адресом «по умолчанию» стоит галочка « ».',
                       style: black(14, FontWeight.normal, 1.1), // Основной стиль текста
                     ),
                   ),
