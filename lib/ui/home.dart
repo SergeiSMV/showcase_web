@@ -5,9 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/fonts.dart';
-import '../data/models/category_model/category_model.dart';
-import '../riverpod/categories_menu_provider.dart';
-import '../riverpod/categories_provider.dart';
 import '../riverpod/menu_index_provider.dart';
 
 

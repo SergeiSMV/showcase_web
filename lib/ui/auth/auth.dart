@@ -29,8 +29,8 @@ class _AuthState extends ConsumerState<Auth> {
   @override
   void initState(){
     super.initState();
-    _loginController.text = 'client1';
-    _passController.text = 'DerParol';
+    // _loginController.text = 'client1';
+    // _passController.text = 'DerParol';
     /*
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectedIndexProvider.notifier).state = 7;
